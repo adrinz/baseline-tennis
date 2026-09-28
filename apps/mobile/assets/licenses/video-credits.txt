@@ -1,0 +1,79 @@
+Baseline demonstration videos
+
+Most of this footage was filmed by other people and studios. The credit stays with them.
+The English voiceover on every clip is Baseline's own coaching narration.
+
+Wikimedia Commons technique lessons
+Creator: Dardo 86 7
+License: Creative Commons Attribution-ShareAlike 3.0 Unported
+https://creativecommons.org/licenses/by-sa/3.0
+Changes: the original Spanish narration was replaced with Baseline's English voiceover,
+the Spanish "Demostración" title card was removed, and the files were converted from
+Ogg Theora/Vorbis to H.264/AAC. "The ready position" is built from 0DRIVE.ogv and
+0REVES_2_MANOS.ogv with held frames and slowed playback.
+These adapted versions, including the voiceover, are shared under CC BY-SA 3.0.
+
+- Forehand drive — https://commons.wikimedia.org/wiki/File:0DRIVE.ogv
+- Drop shot — https://commons.wikimedia.org/wiki/File:0DROP.ogv
+- Lob — https://commons.wikimedia.org/wiki/File:0GLOBO.ogv
+- One-handed backhand — https://commons.wikimedia.org/wiki/File:0REVES_1_MANO.ogv
+- Two-handed backhand — https://commons.wikimedia.org/wiki/File:0REVES_2_MANOS.ogv
+- Serve — https://commons.wikimedia.org/wiki/File:0SAQUE.ogv
+- Slice — https://commons.wikimedia.org/wiki/File:0SLICE.ogv
+- Overhead smash — https://commons.wikimedia.org/wiki/File:0SMASH.ogv
+- Volley — https://commons.wikimedia.org/wiki/File:0VOLEA.ogv
+- The ready position — from 0DRIVE.ogv and 0REVES_2_MANOS.ogv (links above)
+
+Mixkit court and practice clips (4K)
+License: Mixkit Stock Video Free License
+https://mixkit.co/license/#videoFree
+Credit: Mixkit. Changes: Baseline added an English voiceover and re-encoded the 4K masters as HEVC.
+
+- Rally practice — https://mixkit.co/free-stock-video/man-playing-tennis-877/
+- Serve practice — https://mixkit.co/free-stock-video/man-serving-tennis-ball-878/
+- Serve toss — https://mixkit.co/free-stock-video/tennis-player-serving-873/
+- Feet and the first step — https://mixkit.co/free-stock-video/tennis-players-feet-875/
+- Between points — https://mixkit.co/free-stock-video/tennis-player-during-a-match-876/
+- Serve from above — https://mixkit.co/free-stock-video/tennis-serve-aerial-view-879/
+- Rally from above — https://mixkit.co/free-stock-video/two-people-playing-tennis-aerial-view-880/
+- Serve from the baseline — https://mixkit.co/free-stock-video/tennis-players-at-an-outdoor-court-869/
+- Courts from above — https://mixkit.co/free-stock-video/tennis-courts-filmed-from-the-air-5014/
+
+Coverr clips (1080p)
+License: Coverr License — https://coverr.co/license
+Credit: Coverr. Change: Baseline added an English voiceover.
+
+- Racket, balls, and bag — https://coverr.co/videos/taking-tennis-equipment-out-of-a-bag-dxzo3sdnpf
+- A can of tennis balls — https://coverr.co/videos/closing-a-tube-of-tennis-balls-knfmftglm8
+- Rackets in the bag — https://coverr.co/videos/taking-tennis-rackets-out-of-a-bag-cijtwlbsrn
+- Collecting balls — https://coverr.co/videos/man-collecting-tennis-balls-xfghc9m4cc
+- Returning balls to the server — https://coverr.co/videos/man-picking-up-a-tennis-ball-edndxxm4a6
+- A friendly rally — https://coverr.co/videos/woman-playing-tennis-with-a-friend-hg3gjpcguq
+- Serve from behind — https://coverr.co/videos/man-serving-during-tennis-frjgfj3smv
+- Footwork at the baseline — https://coverr.co/videos/two-friends-playing-tennis-a3n4yfaz53
+
+Pexels clips (4K where the original is 4K, otherwise 1080p)
+License: Pexels License — https://www.pexels.com/license/
+Change: Baseline added an English voiceover.
+
+- Shake hands at the net — RDNE Stock project — https://www.pexels.com/video/girls-sportsmanship-after-a-tennis-match-8224588/
+- A beginner group lesson — Riaj Sohel — https://www.pexels.com/video/a-group-of-children-practising-tennis-with-their-teachers-11154490/
+- Dropping into the ready position — cottonbro studio — https://www.pexels.com/video/10340762/
+- Waiting to return a serve — cottonbro studio — https://www.pexels.com/video/5740601/
+- Hand on the handle — cottonbro studio — https://www.pexels.com/video/10340714/
+- Toss and trophy position — cottonbro studio — https://www.pexels.com/video/10340707/
+- Forehand and recovery — cottonbro studio — https://www.pexels.com/video/5740603/
+- Groundstrokes up close — cottonbro studio — https://www.pexels.com/video/5740602/
+- Rally from behind the baseline — cottonbro studio — https://www.pexels.com/video/5740596/
+- Handshake after the match — cottonbro studio — https://www.pexels.com/video/5740593/
+- Full serve from the side — Antoni Shkraba Studio — https://www.pexels.com/video/4902146/
+- Serve across the court — Antoni Shkraba Studio — https://www.pexels.com/video/4902165/
+- Pre-serve routine — Antoni Shkraba Studio — https://www.pexels.com/video/4902149/
+- Serve practice with a basket — Antoni Shkraba Studio — https://www.pexels.com/video/4902139/
+- Ball control on the strings — RDNE Stock project — https://www.pexels.com/video/8224214/
+- A junior player's serve — RDNE Stock project — https://www.pexels.com/video/8224291/
+- Ready for practice — melbourne ross — https://www.pexels.com/video/38592216/
+
+Baseline originals
+- Grips on the handle, Lines of the court, How scoring works, Approach shot pattern,
+  Passing shot choices — original Baseline diagrams and narration.

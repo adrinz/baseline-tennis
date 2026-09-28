@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "welcome-to-tennis",
+    "title": "Introduction to tennis",
+    "level": 1,
+    "levelName": "Complete Beginner",
+    "category": "etiquette",
+    "status": "published"
+  },
+  {
+    "slug": "the-court",
+    "title": "Understanding the court",
+    "level": 1,
+    "levelName": "Complete Beginner",
+    "category": "rules",
+    "status": "published"
+  },
+  {
+    "slug": "scoring",
+    "title": "Scoring",
+    "level": 1,
+    "levelName": "Complete Beginner",
+    "category": "rules",
+    "status": "published"
+  },
+  {
+    "slug": "ready-position",
+    "title": "Ready position",
+    "level": 1,
+    "levelName": "Complete Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "basic-forehand",
+    "title": "Basic forehand",
+    "level": 1,
+    "levelName": "Complete Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "basic-rally",
+    "title": "Basic rallying",
+    "level": 2,
+    "levelName": "Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "rally-construction",
+    "title": "Rally construction",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "strategy",
+    "status": "draft"
+  }
+]

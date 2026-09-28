@@ -1,0 +1,225 @@
+# Baseline CI. This workflow stores no credentials and does not require signing secrets.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      testflight:
+        description: Request a TestFlight candidate
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: api
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for API package
+        id: api
+        run: |
+          if [ ! -f services/api/package.json ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "lock=false" >> "$GITHUB_OUTPUT"
+            echo "services/api/package.json is absent; skipping API install and test."
+            echo "services/api/package.json is absent; skipping API install and test." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            if [ -f services/api/package-lock.json ]; then
+              echo "lock=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "lock=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Setup Node.js 22
+        if: steps.api.outputs.present == 'true' && steps.api.outputs.lock != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Node.js 22 with npm cache
+        if: steps.api.outputs.present == 'true' && steps.api.outputs.lock == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: services/api/package-lock.json
+
+      - name: Install dependencies
+        if: steps.api.outputs.present == 'true'
+        working-directory: services/api
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Lint
+        if: steps.api.outputs.present == 'true'
+        working-directory: services/api
+        continue-on-error: false
+        run: |
+          if node -e 'const pkg = require("./package.json"); if (!pkg.scripts || !pkg.scripts.lint) process.exit(1)'; then
+            npm run lint
+          else
+            echo "package.json has no lint script; skipping npm run lint."
+          fi
+
+      - name: Typecheck
+        if: steps.api.outputs.present == 'true'
+        working-directory: services/api
+        continue-on-error: false
+        run: |
+          if node -e 'const pkg = require("./package.json"); if (!pkg.scripts || !pkg.scripts.typecheck) process.exit(1)'; then
+            npm run typecheck
+          else
+            echo "package.json has no typecheck script; skipping npm run typecheck."
+          fi
+
+      - name: Run tests
+        if: steps.api.outputs.present == 'true'
+        working-directory: services/api
+        continue-on-error: false
+        run: |
+          if node -e 'const pkg = require("./package.json"); if (!pkg.scripts || !pkg.scripts.test) process.exit(1)'; then
+            npm test
+          else
+            echo "package.json has no test script; skipping npm test."
+          fi
+
+  mobile:
+    name: mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for Flutter app
+        id: mobile
+        run: |
+          if [ ! -f apps/mobile/pubspec.yaml ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "apps/mobile/pubspec.yaml is absent; skipping Flutter analyze."
+            echo "apps/mobile/pubspec.yaml is absent; skipping Flutter analyze." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -d apps/mobile/test ]; then
+            echo "tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "tests=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Flutter stable and cache pub
+        if: steps.mobile.outputs.present == 'true'
+        uses: subosito/flutter-action@v2.23.0
+        with:
+          channel: stable
+          cache: true
+          pub-cache: true
+
+      - name: Resolve packages
+        if: steps.mobile.outputs.present == 'true'
+        working-directory: apps/mobile
+        run: flutter pub get
+
+      - name: Analyze
+        if: steps.mobile.outputs.present == 'true'
+        working-directory: apps/mobile
+        continue-on-error: false
+        run: flutter analyze
+
+      - name: Test
+        if: steps.mobile.outputs.present == 'true' && steps.mobile.outputs.tests == 'true'
+        working-directory: apps/mobile
+        continue-on-error: false
+        run: flutter test
+
+      - name: Skip tests
+        if: steps.mobile.outputs.present == 'true' && steps.mobile.outputs.tests != 'true'
+        run: echo "apps/mobile/test is absent; skipping flutter test."
+
+  admin:
+    name: admin
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for admin package
+        id: admin
+        run: |
+          if [ ! -f apps/admin/package.json ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "lock=false" >> "$GITHUB_OUTPUT"
+            echo "apps/admin/package.json is absent; skipping admin typecheck."
+            echo "apps/admin/package.json is absent; skipping admin typecheck." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            if [ -f apps/admin/package-lock.json ]; then
+              echo "lock=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "lock=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Setup Node.js 22
+        if: steps.admin.outputs.present == 'true' && steps.admin.outputs.lock != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Node.js 22 with npm cache
+        if: steps.admin.outputs.present == 'true' && steps.admin.outputs.lock == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/admin/package-lock.json
+
+      - name: Install dependencies
+        if: steps.admin.outputs.present == 'true'
+        working-directory: apps/admin
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Typecheck
+        if: steps.admin.outputs.present == 'true'
+        working-directory: apps/admin
+        continue-on-error: false
+        run: |
+          if node -e 'const pkg = require("./package.json"); if (!pkg.scripts || !pkg.scripts.typecheck) process.exit(1)'; then
+            npm run typecheck
+          else
+            echo "package.json has no typecheck script; skipping npm run typecheck."
+          fi
+
+  testflight:
+    name: testflight
+    if: github.event_name == 'workflow_dispatch' && inputs.testflight == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Signing secrets not configured
+        run: echo "signing secrets not configured"

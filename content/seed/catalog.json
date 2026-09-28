@@ -1,0 +1,497 @@
+{
+  "levels": [
+    { "id": 1, "name": "Complete Beginner", "summary": "First time on a court: gear, rules, grips, and the first swings." },
+    { "id": 2, "name": "Beginner", "summary": "Build a rally you can repeat: strokes, footwork, and simple patterns." },
+    { "id": 3, "name": "Advanced Beginner", "summary": "Consistency, placement, spin, and building a point." },
+    { "id": 4, "name": "Intermediate", "summary": "Patterns, serve plus one, and match decisions." },
+    { "id": 5, "name": "Advanced", "summary": "Biomechanics, scouting, and tournament preparation." }
+  ],
+  "lessons": [
+    {
+      "slug": "welcome-to-tennis",
+      "level": 1,
+      "title": "Introduction to tennis",
+      "category": "etiquette",
+      "freeTier": true,
+      "estimatedMinutes": 8,
+      "summary": "What a match looks like and how a practice session is organized.",
+      "blocks": [
+        { "kind": "overview", "body": "Tennis is a game of keeping the ball in play inside the lines, then learning to place it where your opponent is not. You can start on a wall, a public court, or with one other person." },
+        { "kind": "steps", "body": "1. Learn the lines and the scoring words. 2. Get a racket that fits and a can of balls. 3. Practice a short rally before you worry about winning points." }
+      ]
+    },
+    {
+      "slug": "the-court",
+      "level": 1,
+      "title": "Understanding the court",
+      "category": "rules",
+      "freeTier": true,
+      "estimatedMinutes": 8,
+      "summary": "Baselines, service boxes, alleys, and the net.",
+      "blocks": [
+        { "kind": "overview", "body": "The baseline is the back line. The service boxes are the two rectangles on the far side of the net where a serve must land. The alleys count in doubles and are out in singles." }
+      ]
+    },
+    {
+      "slug": "scoring",
+      "level": 1,
+      "title": "Scoring",
+      "category": "rules",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Love, 15, 30, 40, deuce, games, and sets in plain language.",
+      "blocks": [
+        { "kind": "overview", "body": "Points inside a game are called love, 15, 30, 40, then game. If both players reach 40, the score is deuce. The next point is advantage. Win the following point and you win the game. A set is usually first to 6 games, by 2." }
+      ]
+    },
+    {
+      "slug": "ready-position",
+      "level": 1,
+      "title": "Ready position",
+      "category": "technique",
+      "technique": "ready-position",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "The athletic stance you return to between shots.",
+      "blocks": [
+        { "kind": "why", "body": "Most late swings start from standing tall. A low, balanced ready position lets you move to either side." },
+        { "kind": "steps", "body": "Feet wider than shoulders, knees soft, weight on the balls of the feet, racket up in front of the body, other hand on the throat of the racket." },
+        { "kind": "mistakes", "body": "Standing upright, racket pointed at the ground, heels planted." }
+      ]
+    },
+    {
+      "slug": "basic-forehand",
+      "level": 1,
+      "title": "Basic forehand",
+      "category": "technique",
+      "technique": "forehand",
+      "freeTier": true,
+      "estimatedMinutes": 15,
+      "summary": "A simple forehand path for the first rallies.",
+      "blocks": [
+        { "kind": "steps", "body": "Turn your shoulders as the ball arrives. Racket back early. Meet the ball in front of the front hip. Finish up over the other shoulder." },
+        { "kind": "beginner_mistakes", "body": "Arm-only swing, contact beside the body, no recovery back to the middle." }
+      ]
+    },
+    {
+      "slug": "basic-rally",
+      "level": 2,
+      "title": "Basic rallying",
+      "category": "technique",
+      "technique": "rally",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "Keep the ball going with height, a target, and a recovery step.",
+      "blocks": [
+        { "kind": "overview", "body": "A rally is cooperative practice before it is a contest. Aim higher over the net than you think, land near the opposite baseline, then return to the middle." }
+      ]
+    },
+    {
+      "slug": "rally-construction",
+      "level": 3,
+      "title": "Rally construction",
+      "category": "strategy",
+      "technique": "rally",
+      "freeTier": false,
+      "estimatedMinutes": 12,
+      "summary": "Cross-court until you have a shorter ball, then change direction.",
+      "blocks": [
+        { "kind": "tips", "body": "The cross-court shot is safer because the net is lower in the middle and the court is longer on the diagonal. Change direction only when the ball sits up." }
+      ]
+    },
+    {
+      "slug": "equipment",
+      "level": 1,
+      "title": "Tennis equipment",
+      "category": "etiquette",
+      "freeTier": true,
+      "estimatedMinutes": 8,
+      "summary": "What to bring the first time you go to a court.",
+      "blocks": [
+        { "kind": "overview", "body": "A beginner needs a racket that is not too heavy, a can of tennis balls, and court shoes. Running shoes slip on a hard court." }
+      ]
+    },
+    {
+      "slug": "grips",
+      "level": 1,
+      "title": "How to hold the racket",
+      "category": "technique",
+      "technique": "grip",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Continental, eastern, and semi-western in plain language.",
+      "blocks": [
+        { "kind": "overview", "body": "Continental is the handshake grip used for volleys and serves. An eastern forehand turns the hand a little so the palm is more behind the handle." }
+      ]
+    },
+    {
+      "slug": "basic-backhand",
+      "level": 1,
+      "title": "Basic backhand",
+      "category": "technique",
+      "technique": "backhand",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "A compact two-handed backhand for the first rallies.",
+      "blocks": [
+        { "kind": "steps", "body": "Both hands on the handle. Turn your shoulders. Meet the ball in front of the front hip." }
+      ]
+    },
+    {
+      "slug": "basic-serve",
+      "level": 1,
+      "title": "Basic serve introduction",
+      "category": "technique",
+      "technique": "serve",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "Toss, contact, and a serve that starts in the box.",
+      "blocks": [
+        { "kind": "overview", "body": "Place the toss in front of the hitting shoulder, reach up, and brush the ball into the service box. Catch a bad toss instead of swinging at it." }
+      ]
+    },
+    {
+      "slug": "basic-volley",
+      "level": 1,
+      "title": "Basic volley",
+      "category": "technique",
+      "technique": "volley",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "A short punch in front of the body, before the bounce.",
+      "blocks": [
+        { "kind": "steps", "body": "Continental grip. Racket head above the wrist. Step toward the ball. A short punch, not a full swing." }
+      ]
+    },
+    {
+      "slug": "etiquette",
+      "level": 1,
+      "title": "Basic tennis etiquette",
+      "category": "etiquette",
+      "freeTier": true,
+      "estimatedMinutes": 6,
+      "summary": "How to share a court and keep practice friendly.",
+      "blocks": [
+        { "kind": "overview", "body": "Call your own lines honestly. Return balls to the server, not at them. Wait until a point ends before walking behind a court." }
+      ]
+    },
+    {
+      "slug": "forehand-fundamentals",
+      "level": 2,
+      "title": "Forehand fundamentals",
+      "category": "technique",
+      "technique": "forehand",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "Spacing, contact, and a finish you can repeat.",
+      "blocks": [
+        { "kind": "steps", "body": "Set your feet so you are not jammed. Turn early. Contact in front of the front hip. Finish over the opposite shoulder." }
+      ]
+    },
+    {
+      "slug": "footwork",
+      "level": 2,
+      "title": "Footwork",
+      "category": "technique",
+      "technique": "footwork",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Split step, side shuffle, and getting back to the middle.",
+      "blocks": [
+        { "kind": "overview", "body": "The split step is a small hop as the other player hits. After your shot, recover toward the middle." }
+      ]
+    },
+    {
+      "slug": "serve-placement",
+      "level": 3,
+      "title": "Serve placement",
+      "category": "technique",
+      "technique": "serve",
+      "freeTier": false,
+      "estimatedMinutes": 12,
+      "summary": "Aim for a target in the service box before you add pace.",
+      "blocks": [
+        { "kind": "overview", "body": "A placed second serve that lands in is more useful than a fast serve that misses." }
+      ]
+    },
+    {
+      "slug": "contact-point",
+      "level": 2,
+      "title": "Contact point",
+      "category": "technique",
+      "technique": "contact-point",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Meet the ball in front of the body, with the strings facing the target.",
+      "blocks": [
+        { "kind": "why", "body": "A ball into the net is often a late or low contact, not a lack of effort. Meeting the ball in front gives the racket a path that lifts it over the net." },
+        { "kind": "steps", "body": "1. Prepare before the bounce. 2. Meet the ball in front of the front hip, around waist height on a rally ball. 3. Keep the strings facing the target through contact. 4. Finish up, then recover." }
+      ]
+    },
+    {
+      "slug": "slice",
+      "level": 2,
+      "title": "Slice",
+      "category": "technique",
+      "technique": "slice",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "A high-to-low swing that keeps the ball low after the bounce.",
+      "blocks": [
+        { "kind": "steps", "body": "1. Take the racket back a little higher than a flat swing, face slightly open. 2. Swing under the ball and meet it in front. 3. Keep the wrist quiet. 4. Finish out toward the target so the bounce stays low." }
+      ]
+    },
+    {
+      "slug": "topspin",
+      "level": 2,
+      "title": "Topspin",
+      "category": "technique",
+      "technique": "topspin",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "A low-to-high brush that helps the ball dip inside the lines.",
+      "blocks": [
+        { "kind": "overview", "body": "Topspin is forward spin. The ball climbs, then drops, so you can swing up and still land in the court." },
+        { "kind": "steps", "body": "1. Start the racket head below the ball. 2. Swing up through contact and brush the back of the ball. 3. Finish over the opposite shoulder." }
+      ]
+    },
+    {
+      "slug": "one-handed-backhand",
+      "level": 2,
+      "title": "One-handed backhand",
+      "category": "technique",
+      "technique": "one-handed-backhand",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "A longer backhand with the front shoulder leading the turn.",
+      "blocks": [
+        { "kind": "steps", "body": "1. Use a continental or eastern backhand grip. 2. Turn the front shoulder and keep the free hand on the throat until the racket starts forward. 3. Contact in front with the arm extended. 4. Finish out and up." }
+      ]
+    },
+    {
+      "slug": "return-of-serve",
+      "level": 2,
+      "title": "Return of serve",
+      "category": "technique",
+      "technique": "return",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "A short swing that gets the return in when the serve comes at you.",
+      "blocks": [
+        { "kind": "steps", "body": "1. Split step as the server tosses. 2. Shorten the backswing. 3. Aim cross-court, over the lowest part of the net. 4. Recover to the middle before you look for a winner." }
+      ]
+    },
+    {
+      "slug": "overhead",
+      "level": 2,
+      "title": "Overhead smash",
+      "category": "technique",
+      "technique": "smash",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "A short serve motion on a high ball, hit in front of you.",
+      "blocks": [
+        { "kind": "steps", "body": "1. Turn sideways as soon as you see a high ball. 2. Track it with the free hand and move back with small steps. 3. Hit at the highest point you can reach, in front of the body. 4. Finish across the body and recover." }
+      ]
+    },
+    {
+      "slug": "court-recovery",
+      "level": 2,
+      "title": "Court recovery",
+      "category": "technique",
+      "technique": "recovery",
+      "freeTier": true,
+      "estimatedMinutes": 8,
+      "summary": "The steps that bring you back toward the middle after a shot.",
+      "blocks": [
+        { "kind": "why", "body": "The next ball is easier when you are not still standing where you hit the last one." },
+        { "kind": "steps", "body": "1. After contact, push back toward a spot just on the side you hit from. 2. Stay low for the first two steps. 3. Split step as the other player swings." }
+      ]
+    },
+    {
+      "slug": "lob",
+      "level": 3,
+      "title": "Lob",
+      "category": "technique",
+      "technique": "lob",
+      "freeTier": true,
+      "estimatedMinutes": 8,
+      "summary": "A high ball that buys time or clears a player at the net.",
+      "blocks": [
+        { "kind": "steps", "body": "1. Prepare early and get under the ball. 2. Open the face and lift low to high. 3. Aim above the other player and deep toward the baseline. 4. Finish with the racket high, then recover for a smash." }
+      ]
+    },
+    {
+      "slug": "drop-shot",
+      "level": 3,
+      "title": "Drop shot",
+      "category": "technique",
+      "technique": "drop",
+      "freeTier": true,
+      "estimatedMinutes": 8,
+      "summary": "A soft slice that dies just over the net when the other player is deep.",
+      "blocks": [
+        { "kind": "steps", "body": "1. Prepare like a normal groundstroke so the shot stays hidden. 2. Soften the hands and open the face. 3. Slice gently under the ball. 4. Land it just over the net with very little forward speed." }
+      ]
+    },
+    {
+      "slug": "approach-shot",
+      "level": 3,
+      "title": "Approach shot",
+      "category": "technique",
+      "technique": "approach",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "The shot you hit while moving in, so you can take the net.",
+      "blocks": [
+        { "kind": "steps", "body": "1. Move in on a short ball. 2. Contact in front and aim deep, cross-court or down the line. 3. Keep moving through the shot. 4. Split step inside the service line before the reply." }
+      ]
+    },
+    {
+      "slug": "passing-shot",
+      "level": 3,
+      "title": "Passing shot",
+      "category": "technique",
+      "technique": "passing-shot",
+      "freeTier": true,
+      "estimatedMinutes": 8,
+      "summary": "A low ball past a player who has come to the net.",
+      "blocks": [
+        { "kind": "steps", "body": "1. Choose cross-court or down the line before you swing. 2. Keep the ball low. 3. Contact in front. 4. Change direction only after you see them commit to one side." }
+      ]
+    },
+    {
+      "slug": "second-serve",
+      "level": 3,
+      "title": "Second serve",
+      "category": "technique",
+      "technique": "second-serve",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "A slower serve with shape that still lands in the box.",
+      "blocks": [
+        { "kind": "overview", "body": "The second serve uses the same toss as the first, a little more in front. Brush up the back of the ball so it dips into a big target." },
+        { "kind": "steps", "body": "1. Keep the motion the same as the first serve. 2. Toss slightly in front. 3. Brush up the ball and aim for a large target in the box. 4. Catch a bad toss instead of pushing it in." }
+      ]
+    }
+  ],
+  "drills": [
+    {
+      "slug": "wall-rally",
+      "name": "Wall rally",
+      "levelMin": 1,
+      "objective": "Learn contact and a repeatable swing without a partner.",
+      "equipment": ["racket", "balls", "wall"],
+      "playersRequired": 1,
+      "durationMinutes": 10,
+      "repetitions": "5 sets of 20 contacts",
+      "difficulty": 1,
+      "freeTier": true,
+      "instructions": "Stand about 8 meters from a wall. Drop and hit forehands that bounce once before returning. Reset if you miss twice in a row.",
+      "coachingTips": "Keep the racket prepared before the bounce, not after it.",
+      "commonMistakes": "Standing so close that the swing is rushed."
+    },
+    {
+      "slug": "forehand-consistency",
+      "name": "Forehand consistency",
+      "levelMin": 2,
+      "objective": "Land ten forehands in a row past the service line.",
+      "equipment": ["racket", "balls", "court or wall"],
+      "playersRequired": 1,
+      "durationMinutes": 15,
+      "repetitions": "10 in a row, 3 times",
+      "difficulty": 2,
+      "freeTier": true,
+      "instructions": "Feed yourself or hit against a wall. Count only balls that clear the net by a racket length and land deep.",
+      "coachingTips": "A higher, slower ball counts. Speed comes later.",
+      "commonMistakes": "Swinging harder after a miss."
+    },
+    {
+      "slug": "split-step",
+      "name": "Split-step drill",
+      "levelMin": 2,
+      "objective": "Land a small hop as the opponent hits.",
+      "equipment": ["racket"],
+      "playersRequired": 1,
+      "durationMinutes": 8,
+      "repetitions": "3 sets of 30 seconds",
+      "difficulty": 2,
+      "freeTier": true,
+      "instructions": "Shadow a rally. As you imagine the other player making contact, hop and land balanced, then move one step and recover.",
+      "coachingTips": "The hop is small. It is a timing tool, not a jump.",
+      "commonMistakes": "Hopping late, after the ball has already crossed the net."
+    },
+    {
+      "slug": "serve-target",
+      "name": "Serve target drill",
+      "levelMin": 2,
+      "objective": "Start the serve in a chosen service box.",
+      "equipment": ["racket", "balls", "cones or towels"],
+      "playersRequired": 1,
+      "durationMinutes": 15,
+      "repetitions": "2 sets of 10 serves each box",
+      "difficulty": 2,
+      "freeTier": false,
+      "instructions": "Place a target in the deuce box and one in the ad box. Toss in front of the hitting shoulder and aim for one target at a time.",
+      "coachingTips": "Hold the finish. A falling toss should be caught, not swatted.",
+      "commonMistakes": "Tossing behind the head or too far to the side."
+    },
+    {
+      "slug": "backhand-consistency",
+      "name": "Backhand consistency",
+      "levelMin": 1,
+      "objective": "Keep a two-handed backhand in play for ten contacts.",
+      "equipment": ["racket", "balls", "wall"],
+      "playersRequired": 1,
+      "durationMinutes": 12,
+      "repetitions": "10 in a row, 3 times",
+      "difficulty": 2,
+      "freeTier": true,
+      "instructions": "Stand a comfortable distance from a wall. Hit only backhands. Count a contact that comes back on one bounce.",
+      "coachingTips": "Turn the shoulders before the ball bounces.",
+      "commonMistakes": "Reaching with the arms while the feet stay still."
+    },
+    {
+      "slug": "figure-8",
+      "name": "Figure-8 drill",
+      "levelMin": 2,
+      "objective": "Practice recovery steps between two spots.",
+      "equipment": ["two cones or towels"],
+      "playersRequired": 1,
+      "durationMinutes": 8,
+      "repetitions": "4 sets of 30 seconds",
+      "difficulty": 2,
+      "freeTier": true,
+      "instructions": "Place two markers about four steps apart. Shuffle to one, split step, then shuffle to the other.",
+      "coachingTips": "The split step happens at each marker.",
+      "commonMistakes": "Crossing the feet so you trip when you change direction."
+    }
+  ],
+  "glossary": [
+    { "term": "Ace", "definition": "A serve the receiver does not touch." },
+    { "term": "Love", "definition": "Zero, used in the score." },
+    { "term": "Deuce", "definition": "40–40. Someone must win two points in a row to take the game." },
+    { "term": "Advantage", "definition": "The point after deuce. Win the next point and the game is yours." },
+    { "term": "Let", "definition": "A point that is replayed, often because the serve clipped the net and still landed in." },
+    { "term": "Fault", "definition": "A missed serve. Two in a row is a double fault and loses the point." },
+    { "term": "Rally", "definition": "The exchange of shots after the serve." },
+    { "term": "Volley", "definition": "A shot hit before the ball bounces, usually near the net." },
+    { "term": "Unforced error", "definition": "A miss on a ball you had time to play." },
+    { "term": "Winner", "definition": "A shot that lands in and is not touched by the opponent." },
+    { "term": "Topspin", "definition": "Forward spin that helps the ball dip into the court." },
+    { "term": "Slice", "definition": "Backspin that keeps the ball low." },
+    { "term": "Baseline", "definition": "The line at the back of each end of the court." },
+    { "term": "Tiebreak", "definition": "A special game used when a set reaches 6–6." }
+  ],
+  "coachRules": [
+    {
+      "id": "forehand-net",
+      "match": ["forehand", "net"],
+      "summary": "A forehand into the net usually means the contact or the swing path is too low.",
+      "causes": ["Contact point too low", "Racket prepared late", "Too close to the ball", "Swing path downward", "Follow-through stopped at the waist", "Wrist flipping the racket face open and shut"],
+      "nextTechniqueSlug": "contact-point",
+      "drillSlugs": ["wall-rally", "forehand-consistency"],
+      "practiceNote": "Use three 15-minute sessions this week. Count deep balls, not winners."
+    }
+  ]
+}
