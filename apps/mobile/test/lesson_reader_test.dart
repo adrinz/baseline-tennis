@@ -30,10 +30,10 @@ void main() {
       );
 
       expect(find.text('Ready position'), findsOneWidget);
+      expect(find.text('Dropping into the ready position'), findsOneWidget);
       expect(find.text('Feet and the first step'), findsOneWidget);
+      expect(find.textContaining('Pexels'), findsWidgets);
       expect(find.textContaining('Mixkit'), findsWidgets);
-      expect(find.text('The ready position'), findsOneWidget);
-      expect(find.textContaining('Dardo 86 7'), findsWidgets);
       expect(find.textContaining('Standing upright'), findsOneWidget);
       expect(find.textContaining('Feet wider than shoulders'), findsOneWidget);
     },

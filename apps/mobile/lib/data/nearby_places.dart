@@ -168,6 +168,20 @@ List<NearbyPlace> _parsePlaces(Object? rows) {
   return places;
 }
 
+Future<String?> getCurrentLocality() async {
+  try {
+    final raw = await _channel.invokeMapMethod<String, dynamic>('search', {
+      'kind': 'courts',
+      'radiusMiles': 1,
+    });
+    final locality = raw?['locality'] as String?;
+    if (locality != null && locality.trim().isNotEmpty) {
+      return locality.trim();
+    }
+  } catch (_) {}
+  return null;
+}
+
 Future<void> openDirections(NearbyPlace place) {
   return _channel.invokeMethod<void>('directions', {
     'name': place.name,

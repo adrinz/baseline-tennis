@@ -92,7 +92,7 @@ abstract final class SessionStore {
       streak: json['streak'] as int? ?? 0,
       discoverable: json['discoverable'] as bool? ?? false,
       notifications: notifications,
-      city: json['city'] as String? ?? 'Austin',
+      city: json['city'] as String? ?? 'Melville',
       premium: json['premium'] as bool? ?? false,
       todayPlanDone: json['todayPlanDone'] as bool? ?? false,
       savedCourtIds: _stringSet(json['savedCourtIds']),

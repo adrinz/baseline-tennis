@@ -83,7 +83,7 @@ class PlayerSession {
     this.streak = 0,
     this.discoverable = false,
     this.notifications = defaultNotifications,
-    this.city = 'Austin',
+    this.city = 'Melville',
     this.premium = false,
     this.todayPlanDone = false,
     this.savedCourtIds = const {},

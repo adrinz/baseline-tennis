@@ -31,7 +31,7 @@ const _week = <PlanDay>[
     label: 'Day 1',
     title: 'Find your stance',
     blocks: [
-      PlanBlock(title: 'Warm-up', minutes: 5),
+      PlanBlock(title: 'Warm-up', minutes: 5, drillSlug: 'warmup'),
       PlanBlock(
         title: 'Ready position',
         minutes: 10,
@@ -57,7 +57,7 @@ const _week = <PlanDay>[
     label: 'Day 3',
     title: 'First forehand',
     blocks: [
-      PlanBlock(title: 'Warm-up', minutes: 5),
+      PlanBlock(title: 'Warm-up', minutes: 5, drillSlug: 'warmup'),
       PlanBlock(
         title: 'Basic forehand',
         minutes: 15,

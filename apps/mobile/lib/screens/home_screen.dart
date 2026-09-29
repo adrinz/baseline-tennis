@@ -1,3 +1,4 @@
+import 'package:baseline/data/nearby_places.dart';
 import 'package:baseline/data/videos.dart';
 import 'package:baseline/logic/plan.dart';
 import 'package:baseline/logic/progress.dart';
@@ -14,11 +15,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _resolveLiveLocation();
+    });
+  }
+
+  Future<void> _resolveLiveLocation() async {
+    final locality = await getCurrentLocality();
+    if (locality != null && locality.isNotEmpty && mounted) {
+      if (ref.read(sessionProvider).city != locality) {
+        ref.read(sessionProvider.notifier).setCity(locality);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final session = ref.watch(sessionProvider);
     final lesson = continueLesson(session);
     final featured = videosForLesson(lesson.slug);
@@ -34,8 +57,27 @@ class HomeScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    'assets/images/app_logo.png',
+                    width: 32,
+                    height: 32,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 10),
                 const Expanded(
-                  child: ScaledText('BASELINE', style: BaselineType.eyebrow),
+                  child: ScaledText(
+                    'BASELINE',
+                    style: TextStyle(
+                      fontFamily: 'Barlow Condensed',
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 2.0,
+                      color: BaselineColors.muted,
+                    ),
+                  ),
                 ),
                 const SearchIconButton(),
                 IconButton(
