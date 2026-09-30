@@ -1,7 +1,8 @@
 import 'package:baseline/state/player_session.dart';
 import 'package:baseline/state/session_controller.dart';
-import 'package:baseline/theme/baseline_colors.dart';
+import 'package:baseline/theme/baseline_theme.dart';
 import 'package:baseline/widgets/baseline_button.dart';
+import 'package:baseline/widgets/pill.dart';
 import 'package:baseline/widgets/scaled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,19 +19,17 @@ class SignInScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
           children: [
+            const IconBadge(Icons.lock_open_rounded, size: 56),
+            const SizedBox(height: 18),
             const ScaledText(
               'Use Apple, Google, or a one-time email code.',
-              style: TextStyle(
-                fontSize: 17,
-                height: 1.45,
-                color: BaselineColors.ink,
-              ),
+              style: BaselineType.lead,
             ),
             const SizedBox(height: 28),
             BaselineButton(
               label: 'Sign in with Apple',
               semanticsLabel: 'Sign in with Apple',
-              tone: BaselineButtonTone.line,
+              tone: BaselineButtonTone.ink,
               icon: Icons.apple,
               onPressed: () {
                 ref.read(sessionProvider.notifier).signIn(AuthProvider.apple);
@@ -42,6 +41,7 @@ class SignInScreen extends ConsumerWidget {
               label: 'Continue with Google',
               semanticsLabel: 'Continue with Google',
               tone: BaselineButtonTone.outline,
+              icon: Icons.g_mobiledata_rounded,
               onPressed: () {
                 ref.read(sessionProvider.notifier).signIn(AuthProvider.google);
                 context.go('/age');
@@ -52,6 +52,7 @@ class SignInScreen extends ConsumerWidget {
               label: 'Use email code',
               semanticsLabel: 'Continue with email',
               tone: BaselineButtonTone.outline,
+              icon: Icons.mail_outline_rounded,
               onPressed: () => context.push('/email'),
             ),
           ],

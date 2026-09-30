@@ -149,6 +149,23 @@ final namedStores = <Map<String, Object>>[
   ),
 ];
 
+final namedPlayerGroups = <Map<String, Object>>[
+  place(
+    id: 'players-near',
+    name: 'Park Ave Tennis',
+    miles: 2.4,
+    note: 'Tennis club',
+    source: 'Apple Maps',
+  ),
+  place(
+    id: 'players-far',
+    name: 'Deer Park Tennis Club',
+    miles: 8.6,
+    note: 'Tennis club',
+    source: 'Apple Maps',
+  ),
+];
+
 List<Map<String, Object>> withinMiles(
   List<Map<String, Object>> rows,
   int miles,
@@ -202,6 +219,7 @@ class PlacesHarness {
     final rows = switch (kind) {
       'coaches' => namedCoaches,
       'stores' => namedStores,
+      'players' => namedPlayerGroups,
       _ => namedCourts,
     };
     return withinMiles(rows, miles);

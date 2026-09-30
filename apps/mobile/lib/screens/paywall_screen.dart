@@ -5,8 +5,34 @@ import 'package:baseline/widgets/baseline_button.dart';
 import 'package:baseline/widgets/line_card.dart';
 import 'package:baseline/widgets/scaled_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+class _Perk extends StatelessWidget {
+  const _Perk(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.check_circle_rounded,
+            color: BaselineColors.fairway,
+            size: 22,
+          ),
+          const SizedBox(width: 10),
+          Expanded(child: ScaledText(label, style: BaselineType.cardBody)),
+        ],
+      ),
+    );
+  }
+}
 
 class PaywallScreen extends ConsumerWidget {
   const PaywallScreen({super.key});
@@ -18,6 +44,7 @@ class PaywallScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: BaselineColors.nightCourt,
         foregroundColor: BaselineColors.line,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         title: const ScaledText(
           'Premium',
           style: TextStyle(color: BaselineColors.line),
@@ -42,28 +69,17 @@ class PaywallScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           const LineCard(
+            padding: EdgeInsets.fromLTRB(18, 18, 18, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ScaledText('INCLUDED', style: BaselineType.eyebrowFairway),
-                SizedBox(height: 8),
-                ScaledText(
-                  'All published lessons and drills',
-                  style: BaselineType.cardBody,
-                ),
-                ScaledText(
-                  'Generated weekly plans',
-                  style: BaselineType.cardBody,
-                ),
-                ScaledText('Virtual Tennis Pro', style: BaselineType.cardBody),
-                ScaledText(
-                  'Full progress history',
-                  style: BaselineType.cardBody,
-                ),
-                ScaledText(
-                  'Unlimited partner browsing',
-                  style: BaselineType.cardBody,
-                ),
+                SizedBox(height: 12),
+                _Perk('All published lessons and drills'),
+                _Perk('Generated weekly plans'),
+                _Perk('Virtual Tennis Pro'),
+                _Perk('Full progress history'),
+                _Perk('Unlimited partner browsing'),
               ],
             ),
           ),

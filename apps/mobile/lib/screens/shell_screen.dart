@@ -1,4 +1,5 @@
 import 'package:baseline/theme/baseline_colors.dart';
+import 'package:baseline/widgets/pressable.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -25,81 +26,95 @@ class AppShell extends StatelessWidget {
 }
 
 class _BaselineTabBar extends StatelessWidget {
-  const _BaselineTabBar({
-    required this.selectedIndex,
-    required this.onSelected,
-  });
+  const _BaselineTabBar({required this.selectedIndex, required this.onSelected});
 
   final int selectedIndex;
   final ValueChanged<int> onSelected;
 
   static const _items = [
-    (Icons.home_outlined, 'Home'),
-    (Icons.school_outlined, 'Learn'),
-    (Icons.sports_tennis_outlined, 'Train'),
-    (Icons.place_outlined, 'Discover'),
-    (Icons.person_outline, 'Profile'),
+    (Icons.home_outlined, Icons.home_rounded, 'Home'),
+    (Icons.school_outlined, Icons.school_rounded, 'Learn'),
+    (Icons.sports_tennis_outlined, Icons.sports_tennis, 'Train'),
+    (Icons.place_outlined, Icons.place, 'Discover'),
+    (Icons.person_outline, Icons.person, 'Profile'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: BaselineColors.nightCourt,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: BaselineColors.line.withValues(alpha: 0.24),
-              width: 2,
-            ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: BaselineColors.nightCourt,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
+        boxShadow: [
+          BoxShadow(
+            color: BaselineColors.nightCourt.withValues(alpha: 0.3),
+            blurRadius: 24,
+            offset: const Offset(0, -6),
           ),
-        ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
         child: SafeArea(
           top: false,
-          child: Row(
-            children: [
-              for (var i = 0; i < _items.length; i++)
-                Expanded(
-                  child: Semantics(
-                    button: true,
-                    selected: selectedIndex == i,
-                    label: _items[i].$2,
-                    child: ExcludeSemantics(
-                      child: InkWell(
-                        onTap: () => onSelected(i),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(minHeight: 56),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(6, 8, 6, 4),
+            child: Row(
+              children: [
+                for (var i = 0; i < _items.length; i++)
+                  Expanded(
+                    child: Semantics(
+                      button: true,
+                      selected: selectedIndex == i,
+                      label: _items[i].$3,
+                      child: ExcludeSemantics(
+                        child: InkResponse(
+                          onTap: () {
+                            if (selectedIndex != i) tapFeedback();
+                            onSelected(i);
+                          },
+                          radius: 36,
+                          highlightShape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(18),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(minHeight: 56),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 20,
-                                  height: 3,
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 220),
+                                  curve: Curves.easeOutCubic,
+                                  width: selectedIndex == i ? 58 : 34,
+                                  height: 30,
                                   decoration: BoxDecoration(
                                     color: selectedIndex == i
                                         ? BaselineColors.ball
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(99),
                                   ),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    selectedIndex == i
+                                        ? _items[i].$2
+                                        : _items[i].$1,
+                                    size: 23,
+                                    color: selectedIndex == i
+                                        ? BaselineColors.nightCourt
+                                        : BaselineColors.mist,
+                                  ),
                                 ),
-                                const SizedBox(height: 6),
-                                Icon(
-                                  _items[i].$1,
-                                  size: 24,
-                                  color: selectedIndex == i
-                                      ? BaselineColors.line
-                                      : BaselineColors.mist,
-                                ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: 3),
                                 Text(
-                                  _items[i].$2,
-                                  maxLines: 2,
+                                  _items[i].$3,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                    fontWeight: selectedIndex == i
+                                        ? FontWeight.w800
+                                        : FontWeight.w600,
                                     color: selectedIndex == i
                                         ? BaselineColors.line
                                         : BaselineColors.mist,
@@ -112,8 +127,8 @@ class _BaselineTabBar extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -126,14 +141,36 @@ class SearchIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      tooltip: 'Search lessons and drills',
-      constraints: const BoxConstraints(
-        minWidth: kMinTapTarget,
-        minHeight: kMinTapTarget,
+    return Tooltip(
+      message: 'Search lessons and drills',
+      child: Semantics(
+        button: true,
+        label: 'Search lessons and drills',
+        child: ExcludeSemantics(
+          child: PressScale(
+            child: Material(
+              color: BaselineColors.card,
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: BaselineColors.ink.withValues(alpha: 0.08),
+                ),
+              ),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: () {
+                  tapFeedback();
+                  context.push('/search');
+                },
+                child: const SizedBox(
+                  width: kMinTapTarget,
+                  height: kMinTapTarget,
+                  child: Icon(Icons.search_rounded, color: BaselineColors.ink),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
-      onPressed: () => context.push('/search'),
-      icon: const Icon(Icons.search),
     );
   }
 }

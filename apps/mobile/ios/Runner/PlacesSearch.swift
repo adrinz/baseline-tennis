@@ -33,7 +33,18 @@ private enum PlaceCache {
   private static let limit = 3000
 
   private static func storageKey(_ kind: String) -> String {
-    kind == "courts" ? "baseline.courtCache.v2" : "baseline.placeCache.v1.\(kind)"
+    switch kind {
+    case "courts":
+      return "baseline.courtCache.v2"
+    case "stores":
+      return "baseline.placeCache.v2.stores"
+    case "coaches":
+      return "baseline.placeCache.v2.coaches"
+    case "players":
+      return "baseline.placeCache.v2.players"
+    default:
+      return "baseline.placeCache.v1.\(kind)"
+    }
   }
 
   static func store(_ kind: String, _ places: [[String: Any]]) {
@@ -187,7 +198,7 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
       radiusMeters: pendingRadiusMiles * 1609.344
     )
     startAppleSearch(run)
-    if run.kind == "courts" {
+    if run.kind == "courts" || Self.usesGroupedSearch(run.kind) {
       startTiles(run)
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + Self.firstResultWait) { [weak self] in
@@ -266,9 +277,14 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
     region: MKCoordinateRegion,
     apply: @escaping ([[String: Any]]) -> Void
   ) {
+    let names = queries(for: run.kind)
+    if Self.usesGroupedSearch(run.kind) {
+      searchLimitedQueries(names, run: run, region: region, apply: apply)
+      return
+    }
     let group = DispatchGroup()
     var found: [[String: Any]] = []
-    for query in queries(for: run.kind) {
+    for query in names {
       group.enter()
       let request = MKLocalSearch.Request()
       request.naturalLanguageQuery = query
@@ -295,12 +311,161 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
     }
   }
 
+  /// Shop, coach, and player lookups stay at two at a time. Apple Maps drops searches when too many run together.
+  private func searchLimitedQueries(
+    _ queries: [String],
+    run: SearchRun,
+    region: MKCoordinateRegion,
+    apply: @escaping ([[String: Any]]) -> Void
+  ) {
+    let maxConcurrent = 2
+    var index = 0
+    var inFlight = 0
+    func finish() {
+      apply([])
+      if run.delivered {
+        pushUpdate(run)
+      } else {
+        deliver(run)
+      }
+    }
+    func pump() {
+      if run.token != activeToken || run.done {
+        if inFlight == 0 { finish() }
+        return
+      }
+      while inFlight < maxConcurrent, index < queries.count {
+        let query = queries[index]
+        index += 1
+        inFlight += 1
+        performAppleQuery(query, run: run, region: region, attempt: 0) { mapped in
+          if self.activeToken == run.token, !run.done, !mapped.isEmpty {
+            run.apple.append(contentsOf: mapped)
+            PlaceCache.store(run.kind, mapped)
+            if run.delivered {
+              self.pushUpdate(run)
+            } else {
+              self.deliver(run, force: true)
+            }
+          }
+          inFlight -= 1
+          if index >= queries.count && inFlight == 0 {
+            finish()
+          } else {
+            pump()
+          }
+        }
+      }
+    }
+    if queries.isEmpty {
+      finish()
+      return
+    }
+    pump()
+  }
+
+  private func performAppleQuery(
+    _ query: String,
+    run: SearchRun,
+    region: MKCoordinateRegion,
+    attempt: Int,
+    completion: @escaping ([[String: Any]]) -> Void
+  ) {
+    guard run.token == activeToken, !run.done else {
+      DispatchQueue.main.async { completion([]) }
+      return
+    }
+    let request = MKLocalSearch.Request()
+    request.naturalLanguageQuery = query
+    request.region = region
+    request.resultTypes = .pointOfInterest
+    MKLocalSearch(request: request).start { [weak self] response, error in
+      guard let self else {
+        DispatchQueue.main.async { completion([]) }
+        return
+      }
+      let throttled: Bool
+      if let ns = error as NSError? {
+        throttled = ns.domain == MKErrorDomain
+          && ns.code == MKError.Code.loadingThrottled.rawValue
+      } else {
+        throttled = false
+      }
+      if throttled && attempt < 2 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(attempt + 1) * 2) { [weak self] in
+          guard let self else {
+            completion([])
+            return
+          }
+          self.performAppleQuery(
+            query,
+            run: run,
+            region: region,
+            attempt: attempt + 1,
+            completion: completion
+          )
+        }
+        return
+      }
+      let mapped = (response?.mapItems ?? []).compactMap { item -> [String: Any]? in
+        switch run.kind {
+        case "coaches":
+          return Self.coachPlace(from: item, origin: run.origin)
+        case "players":
+          return Self.playerPlace(from: item, origin: run.origin)
+        default:
+          return Self.storePlace(from: item, origin: run.origin)
+        }
+      }
+      DispatchQueue.main.async {
+        completion(mapped)
+      }
+    }
+  }
+
+  private static func usesGroupedSearch(_ kind: String) -> Bool {
+    kind == "stores" || kind == "coaches" || kind == "players"
+  }
+
   private func queries(for kind: String) -> [String] {
     switch kind {
     case "coaches":
-      return ["tennis coach"]
+      // "tennis coach" alone misses academies, clubs, and lesson programs.
+      return [
+        "tennis coach",
+        "tennis academy",
+        "tennis center",
+        "tennis club",
+        "tennis lessons",
+        "tennis instructor",
+        "tennis training",
+        "tennis school",
+      ]
+    case "players":
+      // A player search looks for leagues, clubs, and social tennis, not private homes.
+      return [
+        "tennis league",
+        "tennis club",
+        "social tennis",
+        "adult tennis",
+        "USTA tennis",
+        "tennis ladder",
+        "tennis center",
+        "tennis team",
+      ]
     case "stores":
-      return ["tennis shop"]
+      // "tennis shop" alone misses sporting-goods stores, pro shops, and stringers.
+      return [
+        "sporting goods",
+        "tennis shop",
+        "tennis store",
+        "tennis pro shop",
+        "racquet shop",
+        "racket shop",
+        "tennis stringing",
+        "racquet stringing",
+        "tennis",
+      ]
     default:
       return ["tennis court", "tennis club", "tennis academy", "tennis center"]
     }
@@ -319,7 +484,7 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
   private func nextTile(_ run: SearchRun) {
     guard run.token == activeToken, !run.done, !run.tileQueue.isEmpty else { return }
     let tile = run.tileQueue.removeFirst()
-    Self.fetchTile(tile, attempt: 0) { [weak self] elements in
+    Self.fetchTile(run.kind, tile, attempt: 0) { [weak self] elements in
       guard let self, run.token == self.activeToken, !run.done else { return }
       for element in elements {
         let key = "\(element["type"] ?? "n")/\(element["id"] ?? UUID().uuidString)"
@@ -364,13 +529,8 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
     return tiles.sorted { $0.distance < $1.distance }.map(\.box)
   }
 
-  private static func fetchTile(
-    _ box: [Double],
-    attempt: Int,
-    completion: @escaping ([[String: Any]]) -> Void
-  ) {
-    let bbox = box.map { String(format: "%.5f", $0) }.joined(separator: ",")
-    let query = """
+  private static func courtOverpass(_ bbox: String) -> String {
+    """
     [out:json][timeout:25];
     (
       way["leisure"="pitch"]["sport"~"tennis"](\(bbox));
@@ -386,6 +546,68 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
     );
     out center tags qt;
     """
+  }
+
+  /// Sporting-goods stores, tennis shops, and stringers. Courts are not included.
+  private static func storeOverpass(_ bbox: String) -> String {
+    """
+    [out:json][timeout:25];
+    (
+      nwr["shop"="sports"](\(bbox));
+      nwr["shop"="outdoor"]["name"~"REI",i](\(bbox));
+      nwr["shop"]["name"~"tennis|racquet|racket|stringing|stringer|sporting goods",i](\(bbox));
+      nwr["craft"]["name"~"stringing|stringer|racquet|racket",i](\(bbox));
+      nwr["office"]["name"~"stringing|stringer",i](\(bbox));
+      nwr["name"~"sporting goods",i]["shop"](\(bbox));
+    );
+    out center tags qt;
+    """
+  }
+
+  /// Tennis coaches, academies, and clubs. Courts and shops are left out.
+  private static func coachOverpass(_ bbox: String) -> String {
+    """
+    [out:json][timeout:25];
+    (
+      nwr["name"~"tennis",i]["name"~"coach|instructor|academy|lesson|trainer|clinic|camp",i](\(bbox));
+      nwr["leisure"="sports_centre"]["sport"~"tennis",i]["name"~"academy|coach|lesson|club|center|centre",i](\(bbox));
+      nwr["club"="sport"]["sport"~"tennis",i]["name"](\(bbox));
+    );
+    out center tags qt;
+    """
+  }
+
+  /// Leagues, clubs, and social tennis. Private homes and bare courts are left out.
+  private static func playerOverpass(_ bbox: String) -> String {
+    """
+    [out:json][timeout:25];
+    (
+      nwr["name"~"tennis",i]["name"~"league|ladder|usta|social|club|meetup|mixer|team",i](\(bbox));
+      nwr["leisure"="sports_centre"]["sport"~"tennis",i]["name"](\(bbox));
+      nwr["club"="sport"]["sport"~"tennis",i]["name"](\(bbox));
+    );
+    out center tags qt;
+    """
+  }
+
+  private static func fetchTile(
+    _ kind: String,
+    _ box: [Double],
+    attempt: Int,
+    completion: @escaping ([[String: Any]]) -> Void
+  ) {
+    let bbox = box.map { String(format: "%.5f", $0) }.joined(separator: ",")
+    let query: String
+    switch kind {
+    case "stores":
+      query = storeOverpass(bbox)
+    case "coaches":
+      query = coachOverpass(bbox)
+    case "players":
+      query = playerOverpass(bbox)
+    default:
+      query = courtOverpass(bbox)
+    }
     let host = overpassHosts[attempt % overpassHosts.count]
     guard let url = URL(string: host) else {
       DispatchQueue.main.async { completion([]) }
@@ -395,7 +617,13 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
     request.httpMethod = "POST"
     request.httpBody = query.data(using: .utf8)
     request.timeoutInterval = 30
-    request.setValue("Baseline/1.0 (tennis court search)", forHTTPHeaderField: "User-Agent")
+    let agent = switch kind {
+    case "stores": "Baseline/1.0 (sports shop search)"
+    case "coaches": "Baseline/1.0 (tennis coach search)"
+    case "players": "Baseline/1.0 (tennis player search)"
+    default: "Baseline/1.0 (tennis court search)"
+    }
+    request.setValue(agent, forHTTPHeaderField: "User-Agent")
     URLSession.shared.dataTask(with: request) { data, response, _ in
       let status = (response as? HTTPURLResponse)?.statusCode ?? 0
       if status == 200,
@@ -411,7 +639,7 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
         return
       }
       DispatchQueue.main.asyncAfter(deadline: .now() + Double(attempt + 1) * 2) {
-        fetchTile(box, attempt: attempt + 1, completion: completion)
+        fetchTile(kind, box, attempt: attempt + 1, completion: completion)
       }
     }.resume()
   }
@@ -424,6 +652,18 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
       let osm = Self.venues(from: Array(run.osmElements.values), origin: run.origin)
       PlaceCache.store(run.kind, osm)
       all.append(contentsOf: osm)
+    } else if run.kind == "stores" {
+      let osm = Self.shops(from: Array(run.osmElements.values), origin: run.origin)
+      PlaceCache.store(run.kind, osm)
+      all.append(contentsOf: osm)
+    } else if run.kind == "coaches" {
+      let osm = Self.coachingPlaces(from: Array(run.osmElements.values), origin: run.origin)
+      PlaceCache.store(run.kind, osm)
+      all.append(contentsOf: osm)
+    } else if run.kind == "players" {
+      let osm = Self.playerGroups(from: Array(run.osmElements.values), origin: run.origin)
+      PlaceCache.store(run.kind, osm)
+      all.append(contentsOf: osm)
     }
     all.append(contentsOf: PlaceCache.within(run.kind, run.origin, radiusMeters: run.radiusMeters))
     let limit = Int(run.radiusMeters.rounded())
@@ -433,9 +673,15 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
 
   private func deliver(_ run: SearchRun, force: Bool = false) {
     guard run.token == activeToken, !run.delivered else { return }
-    let ready = run.kind == "courts"
-      ? run.appleDone && (run.firstTileDone || run.tilesPending == 0)
-      : run.firstTileDone || run.appleTilesPending == 0
+    let ready: Bool
+    switch run.kind {
+    case "courts":
+      ready = run.appleDone && (run.firstTileDone || run.tilesPending == 0)
+    case "stores", "coaches", "players":
+      ready = run.firstTileDone || (run.appleTilesPending == 0 && run.tilesPending == 0)
+    default:
+      ready = run.firstTileDone || run.appleTilesPending == 0
+    }
     guard force || ready else { return }
     run.delivered = true
     let searching = isSearching(run)
@@ -450,10 +696,14 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
   }
 
   private func isSearching(_ run: SearchRun) -> Bool {
-    if run.kind == "courts" {
+    switch run.kind {
+    case "courts":
       return run.tilesPending > 0 || !run.appleDone
+    case "stores", "coaches", "players":
+      return run.appleTilesPending > 0 || run.tilesPending > 0
+    default:
+      return run.appleTilesPending > 0
     }
-    return run.appleTilesPending > 0
   }
 
   private func pushUpdate(_ run: SearchRun) {
@@ -575,7 +825,255 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
       || lower.contains("racket")
   }
 
+  /// Tennis shops, racquet stringers, and general sporting-goods stores. Courts, clubs, and single-sport shops stay out.
+  private static func isShownStore(name raw: String, category: String, shop: String) -> Bool {
+    let name = normalizedPlaceName(raw)
+    if name.isEmpty || isDeniedStoreName(name) || isDeniedShopTag(shop) { return false }
+    if isBlockedStoreCategory(category) && !hasShopWords(name) { return false }
+    if isVenueNotShop(name) { return false }
+    if isTennisRetailer(name) {
+      return hasShopWords(name)
+        || isRetailContext(category: category, shop: shop)
+        || name.contains("racquet")
+        || name.contains("racket")
+        || name.contains("stringing")
+        || name.contains("stringer")
+    }
+    return isGeneralSportsRetailer(name)
+  }
+
+  private static func storeNote(_ raw: String) -> String {
+    let name = normalizedPlaceName(raw)
+    var parts: [String] = []
+    if name.contains("stringing") || name.contains("stringer") || isStringShop(name) {
+      parts.append("Racquet stringing")
+    }
+    if name.contains("tennis") || name.contains("racquet") || name.contains("racket")
+      || name.contains("pro shop") {
+      parts.append("Tennis shop")
+    } else if name.contains("sporting goods") {
+      parts.append("Sporting goods")
+    } else {
+      parts.append("Sports shop")
+    }
+    return parts.joined(separator: " · ")
+  }
+
+  private static func isStringShop(_ name: String) -> Bool {
+    words(in: name).contains("string") && (name.contains("shop") || name.contains("grip"))
+  }
+
+  private static func isTennisRetailer(_ name: String) -> Bool {
+    if name.contains("tennis") || name.contains("racquet") || name.contains("racket")
+      || name.contains("stringing") || name.contains("stringer") {
+      return true
+    }
+    return isStringShop(name)
+  }
+
+  private static func isGeneralSportsRetailer(_ name: String) -> Bool {
+    if name.contains("sporting goods") || name.contains("sport shop")
+      || name.contains("sports shop") || name.contains("sport store")
+      || name.contains("sports store") || name.contains("play it again")
+      || name.contains("modell") || name.contains("dick s") || name.contains("dicks") {
+      return true
+    }
+    let tokens = words(in: name)
+    return tokens.contains("sports") || tokens.contains("rei") || tokens.contains("decathlon")
+      || tokens.contains("scheels") || tokens.contains("hibbett")
+  }
+
+  private static func hasShopWords(_ name: String) -> Bool {
+    name.contains("shop") || name.contains("store") || name.contains("stringing")
+      || name.contains("stringer") || name.contains("sporting goods") || name.contains("pro shop")
+  }
+
+  private static func isVenueNotShop(_ name: String) -> Bool {
+    if isGeneralSportsRetailer(name) || hasShopWords(name) { return false }
+    if name.contains("court") { return true }
+    let tokens = words(in: name)
+    return tokens.contains("club") || tokens.contains("academy")
+      || tokens.contains("center") || tokens.contains("centre")
+  }
+
+  private static func isRetailContext(category: String, shop: String) -> Bool {
+    category == "MKPOICategoryStore"
+      || ["sports", "outdoor", "clothes", "shoes", "department_store", "general"].contains(shop)
+  }
+
+  private static func isBlockedStoreCategory(_ category: String) -> Bool {
+    [
+      "MKPOICategoryTennis", "MKPOICategoryPark", "MKPOICategoryNationalPark",
+      "MKPOICategorySchool", "MKPOICategoryUniversity", "MKPOICategoryStadium",
+      "MKPOICategoryFitnessCenter", "MKPOICategoryRestaurant", "MKPOICategoryCafe",
+      "MKPOICategoryNightlife", "MKPOICategoryTheater", "MKPOICategoryMovieTheater",
+      "MKPOICategoryGolf", "MKPOICategorySwimming", "MKPOICategorySkating",
+      "MKPOICategoryBeach", "MKPOICategoryAmusementPark",
+    ].contains(category)
+  }
+
+  private static func isDeniedShopTag(_ shop: String) -> Bool {
+    [
+      "weapons", "gun", "firearms", "military_surplus", "bicycle", "motorcycle",
+      "ski", "fishing", "hunting", "pyrotechnics", "car", "car_repair", "tyres",
+      "tobacco", "e-cigarette", "alcohol", "lottery", "pawnbroker",
+    ].contains(shop)
+  }
+
+  private static func isDeniedStoreName(_ name: String) -> Bool {
+    if name.contains("monkey") || name.contains("campsite") || name.contains("foot locker")
+      || name.contains("finish line") || name.contains("public lands")
+      || name.contains("field stream") || name.contains("art resource") {
+      return true
+    }
+    let banned: Set<String> = [
+      "ski", "snowboard", "soccer", "hockey", "bicycle", "bike", "bikes",
+      "running", "runner", "nike", "adidas", "alo", "paintball", "skate",
+      "golf", "pga", "shoe", "shoes", "footwear", "pool", "pools", "swim",
+      "gun", "weapon", "firearm", "fishing", "bait", "dive", "scuba",
+      "bowling", "yoga", "lululemon", "badminton", "sno", "equestrian", "surf",
+    ]
+    return !words(in: name).isDisjoint(with: banned)
+  }
+
+  private static func words(in name: String) -> Set<String> {
+    Set(name.split(separator: " ").map(String.init))
+  }
+
+  /// Coaches, instructors, academies, and tennis clubs. Shops, courts, and other sports stay out.
+  private static func isShownCoach(name raw: String, category: String) -> Bool {
+    let name = normalizedPlaceName(raw)
+    if name.isEmpty || isDeniedCoachName(name) || isShopNotCoach(name) || isCourtOnly(name) {
+      return false
+    }
+    let coaching = isCoachingBusiness(name)
+    if isBlockedCoachCategory(category) && !coaching { return false }
+    let tennisNamed = name.contains("tennis") || name.contains("racquet") || name.contains("racket")
+    if coaching && (tennisNamed || category == "MKPOICategoryTennis") { return true }
+    if category == "MKPOICategoryTennis" && tennisNamed { return true }
+    let clubNamed = name.contains("club") || name.contains("center") || name.contains("centre")
+      || name.contains("sportime")
+    return clubNamed && tennisNamed && (category == "MKPOICategoryTennis" || category.isEmpty)
+  }
+
+  private static func coachNote(_ raw: String) -> String {
+    let name = normalizedPlaceName(raw)
+    if name.contains("academy") { return "Tennis academy" }
+    if name.contains("club") || name.contains("center") || name.contains("centre")
+      || name.contains("indoor") {
+      return "Tennis club"
+    }
+    return "Tennis coach"
+  }
+
+  private static func isCoachingBusiness(_ name: String) -> Bool {
+    if name.contains("coach") || name.contains("instructor") || name.contains("lesson")
+      || name.contains("academy") || name.contains("trainer") || name.contains("training")
+      || name.contains("clinic") || name.contains("teaching") {
+      return true
+    }
+    return words(in: name).contains("camp")
+  }
+
+  private static func isShopNotCoach(_ name: String) -> Bool {
+    name.contains("pro shop") || name.contains("sporting goods") || name.contains("stringing")
+      || name.contains("stringer") || name.contains("racket shop") || name.contains("racquet shop")
+  }
+
+  private static func isCourtOnly(_ name: String) -> Bool {
+    name.contains("tennis court") || name.contains("tennis courts") || words(in: name).contains("courts")
+  }
+
+  private static func isBlockedCoachCategory(_ category: String) -> Bool {
+    [
+      "MKPOICategoryPark", "MKPOICategoryNationalPark", "MKPOICategorySchool",
+      "MKPOICategoryUniversity", "MKPOICategoryStadium", "MKPOICategoryStore",
+      "MKPOICategoryFitnessCenter", "MKPOICategoryRestaurant", "MKPOICategoryCafe",
+      "MKPOICategoryGolf", "MKPOICategoryBaseball", "MKPOICategorySkating",
+      "MKPOICategorySwimming", "MKPOICategoryBeach", "MKPOICategoryAmusementPark",
+    ].contains(category)
+  }
+
+  private static func isDeniedCoachName(_ name: String) -> Bool {
+    if name.contains("country club") && !name.contains("tennis") { return true }
+    if name.contains("esport") { return true }
+    let banned: Set<String> = [
+      "golf", "hockey", "baseball", "ski", "soccer", "paintball", "bowling",
+    ]
+    return !words(in: name).isDisjoint(with: banned)
+  }
+
+  /// Public leagues, clubs, and social tennis where someone can find a hitting partner.
+  private static func isShownPlayerGroup(name raw: String, category: String) -> Bool {
+    let name = normalizedPlaceName(raw)
+    if name.isEmpty || isDeniedCoachName(name) || isShopNotCoach(name) || isCourtOnly(name) {
+      return false
+    }
+    let group = isPlayerGroup(name)
+    if isBlockedCoachCategory(category) && !group { return false }
+    let tennisNamed = name.contains("tennis") || name.contains("racquet") || name.contains("racket")
+      || name.contains("usta")
+    if group && (tennisNamed || name.contains("usta")) { return true }
+    let clubNamed = name.contains("club") || name.contains("center") || name.contains("centre")
+      || name.contains("indoor") || name.contains("sportime")
+    if tennisNamed && clubNamed && (category == "MKPOICategoryTennis" || category.isEmpty) {
+      return true
+    }
+    return category == "MKPOICategoryTennis" && tennisNamed
+  }
+
+  private static func playerNote(_ raw: String) -> String {
+    let name = normalizedPlaceName(raw)
+    if name.contains("league") || name.contains("ladder") || name.contains("usta")
+      || words(in: name).contains("team") {
+      return "Tennis league"
+    }
+    if name.contains("social") || name.contains("meetup") || name.contains("mixer")
+      || name.contains("round robin") {
+      return "Social tennis"
+    }
+    if name.contains("academy") { return "Tennis academy" }
+    if name.contains("club") || name.contains("center") || name.contains("centre")
+      || name.contains("indoor") || name.contains("sportime") {
+      return "Tennis club"
+    }
+    return "Find a match"
+  }
+
+  private static func isPlayerGroup(_ name: String) -> Bool {
+    name.contains("league") || name.contains("ladder") || name.contains("usta")
+      || name.contains("social") || name.contains("meetup") || name.contains("mixer")
+      || name.contains("round robin") || words(in: name).contains("team")
+  }
+
   // MARK: Mapping
+
+  private static func storePlace(from item: MKMapItem, origin: CLLocation) -> [String: Any]? {
+    guard var place = place(from: item, origin: origin, kind: "stores") else { return nil }
+    let name = place["name"] as? String ?? ""
+    let category = item.pointOfInterestCategory?.rawValue ?? ""
+    guard isShownStore(name: name, category: category, shop: "") else { return nil }
+    place["note"] = storeNote(name)
+    return place
+  }
+
+  private static func coachPlace(from item: MKMapItem, origin: CLLocation) -> [String: Any]? {
+    guard var place = place(from: item, origin: origin, kind: "coaches") else { return nil }
+    let name = place["name"] as? String ?? ""
+    let category = item.pointOfInterestCategory?.rawValue ?? ""
+    guard isShownCoach(name: name, category: category) else { return nil }
+    place["note"] = coachNote(name)
+    return place
+  }
+
+  private static func playerPlace(from item: MKMapItem, origin: CLLocation) -> [String: Any]? {
+    guard var place = place(from: item, origin: origin, kind: "players") else { return nil }
+    let name = place["name"] as? String ?? ""
+    let category = item.pointOfInterestCategory?.rawValue ?? ""
+    guard isShownPlayerGroup(name: name, category: category) else { return nil }
+    place["note"] = playerNote(name)
+    return place
+  }
 
   private static func place(from item: MKMapItem, origin: CLLocation, kind: String) -> [String: Any]? {
     let placemark = item.placemark
@@ -605,6 +1103,109 @@ final class PlacesChannel: NSObject, CLLocationManagerDelegate {
       "longitude": coordinate.longitude,
       "distanceMeters": Int(meters.rounded()),
     ]
+  }
+
+  /// Sporting-goods stores, tennis shops, and stringers from OpenStreetMap.
+  private static func shops(from elements: [[String: Any]], origin: CLLocation) -> [[String: Any]] {
+    elements.compactMap { element in
+      let tags = element["tags"] as? [String: Any] ?? [:]
+      let name = tag(tags, "name") ?? ""
+      let shop = (tag(tags, "shop") ?? "").lowercased()
+      guard isShownStore(name: name, category: "", shop: shop) else { return nil }
+      let center = element["center"] as? [String: Any]
+      guard
+        let latitude = doubleValue(element["lat"]) ?? doubleValue(center?["lat"]),
+        let longitude = doubleValue(element["lon"]) ?? doubleValue(center?["lon"])
+      else { return nil }
+      let coordinate = CLLocation(latitude: latitude, longitude: longitude)
+      let street = tag(tags, "addr:street")
+      let city = tag(tags, "addr:city") ?? ""
+      let region = tag(tags, "addr:state") ?? ""
+      return [
+        "id": "osm-shop-\(element["type"] ?? "n")/\(element["id"] ?? "\(latitude),\(longitude)")",
+        "name": name,
+        "address": [street, city, region].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", "),
+        "neighborhood": "",
+        "city": city,
+        "region": region,
+        "postalCode": tag(tags, "addr:postcode") ?? "",
+        "phone": tag(tags, "phone") ?? tag(tags, "contact:phone") ?? "",
+        "url": tag(tags, "website") ?? tag(tags, "contact:website") ?? "",
+        "note": storeNote(name),
+        "source": "OpenStreetMap",
+        "latitude": latitude,
+        "longitude": longitude,
+        "distanceMeters": Int(origin.distance(from: coordinate).rounded()),
+      ]
+    }
+  }
+
+  /// Tennis coaches, academies, and clubs from OpenStreetMap.
+  private static func coachingPlaces(from elements: [[String: Any]], origin: CLLocation) -> [[String: Any]] {
+    elements.compactMap { element in
+      let tags = element["tags"] as? [String: Any] ?? [:]
+      let name = tag(tags, "name") ?? ""
+      guard isShownCoach(name: name, category: "") else { return nil }
+      let center = element["center"] as? [String: Any]
+      guard
+        let latitude = doubleValue(element["lat"]) ?? doubleValue(center?["lat"]),
+        let longitude = doubleValue(element["lon"]) ?? doubleValue(center?["lon"])
+      else { return nil }
+      let coordinate = CLLocation(latitude: latitude, longitude: longitude)
+      let street = tag(tags, "addr:street")
+      let city = tag(tags, "addr:city") ?? ""
+      let region = tag(tags, "addr:state") ?? ""
+      return [
+        "id": "osm-coach-\(element["type"] ?? "n")/\(element["id"] ?? "\(latitude),\(longitude)")",
+        "name": name,
+        "address": [street, city, region].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", "),
+        "neighborhood": "",
+        "city": city,
+        "region": region,
+        "postalCode": tag(tags, "addr:postcode") ?? "",
+        "phone": tag(tags, "phone") ?? tag(tags, "contact:phone") ?? "",
+        "url": tag(tags, "website") ?? tag(tags, "contact:website") ?? "",
+        "note": coachNote(name),
+        "source": "OpenStreetMap",
+        "latitude": latitude,
+        "longitude": longitude,
+        "distanceMeters": Int(origin.distance(from: coordinate).rounded()),
+      ]
+    }
+  }
+
+  /// Leagues, clubs, and social tennis from OpenStreetMap.
+  private static func playerGroups(from elements: [[String: Any]], origin: CLLocation) -> [[String: Any]] {
+    elements.compactMap { element in
+      let tags = element["tags"] as? [String: Any] ?? [:]
+      let name = tag(tags, "name") ?? ""
+      guard isShownPlayerGroup(name: name, category: "") else { return nil }
+      let center = element["center"] as? [String: Any]
+      guard
+        let latitude = doubleValue(element["lat"]) ?? doubleValue(center?["lat"]),
+        let longitude = doubleValue(element["lon"]) ?? doubleValue(center?["lon"])
+      else { return nil }
+      let coordinate = CLLocation(latitude: latitude, longitude: longitude)
+      let street = tag(tags, "addr:street")
+      let city = tag(tags, "addr:city") ?? ""
+      let region = tag(tags, "addr:state") ?? ""
+      return [
+        "id": "osm-players-\(element["type"] ?? "n")/\(element["id"] ?? "\(latitude),\(longitude)")",
+        "name": name,
+        "address": [street, city, region].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", "),
+        "neighborhood": "",
+        "city": city,
+        "region": region,
+        "postalCode": tag(tags, "addr:postcode") ?? "",
+        "phone": tag(tags, "phone") ?? tag(tags, "contact:phone") ?? "",
+        "url": tag(tags, "website") ?? tag(tags, "contact:website") ?? "",
+        "note": playerNote(name),
+        "source": "OpenStreetMap",
+        "latitude": latitude,
+        "longitude": longitude,
+        "distanceMeters": Int(origin.distance(from: coordinate).rounded()),
+      ]
+    }
   }
 
   /// One row per park, school, or club. Courts inside the same place are counted together.

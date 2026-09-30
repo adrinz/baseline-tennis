@@ -1,8 +1,9 @@
 import 'package:baseline/theme/baseline_colors.dart';
+import 'package:baseline/widgets/pressable.dart';
 import 'package:baseline/widgets/scaled_text.dart';
 import 'package:flutter/material.dart';
 
-enum BaselineButtonTone { ball, fairway, line, outline }
+enum BaselineButtonTone { ball, fairway, line, outline, ink }
 
 class BaselineButton extends StatelessWidget {
   const BaselineButton({
@@ -40,55 +41,69 @@ class BaselineButton extends StatelessWidget {
             minWidth: kMinTapTarget,
             minHeight: kMinTapTarget,
           ),
-          child: ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: colors.background,
-              foregroundColor: colors.foreground,
-              disabledBackgroundColor: colors.background.withValues(
-                alpha: 0.45,
+          child: PressScale(
+            enabled: enabled,
+            scale: 0.98,
+            child: ElevatedButton(
+              onPressed: enabled
+                  ? () {
+                      tapFeedback();
+                      onPressed!();
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: colors.background,
+                foregroundColor: colors.foreground,
+                disabledBackgroundColor: colors.background.withValues(
+                  alpha: 0.45,
+                ),
+                disabledForegroundColor: colors.foreground.withValues(
+                  alpha: 0.55,
+                ),
+                minimumSize: const Size.fromHeight(54),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                shape: StadiumBorder(
+                  side: tone == BaselineButtonTone.outline
+                      ? BorderSide(
+                          color: onDark
+                              ? BaselineColors.line
+                              : BaselineColors.fairway,
+                          width: 1.5,
+                        )
+                      : BorderSide.none,
+                ),
+                textStyle: const TextStyle(
+                  fontFamily: 'Source Sans 3',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              disabledForegroundColor: colors.foreground.withValues(
-                alpha: 0.55,
-              ),
-              minimumSize: const Size.fromHeight(52),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-              shape: StadiumBorder(
-                side: tone == BaselineButtonTone.outline
-                    ? BorderSide(
-                        color: onDark
-                            ? BaselineColors.line
-                            : BaselineColors.fairway,
-                        width: 1.5,
-                      )
-                    : BorderSide.none,
-              ),
-              textStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (icon != null) ...[
-                  Icon(icon, size: 20, color: foreground),
-                  const SizedBox(width: 8),
-                ],
-                Flexible(
-                  child: ScaledText(
-                    label,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: foreground,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, size: 20, color: foreground),
+                    const SizedBox(width: 8),
+                  ],
+                  Flexible(
+                    child: ScaledText(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: foreground,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.1,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -104,10 +119,18 @@ class BaselineButton extends StatelessWidget {
         return const _ButtonColors(BaselineColors.fairway, BaselineColors.line);
       case BaselineButtonTone.line:
         return const _ButtonColors(BaselineColors.line, BaselineColors.ink);
+      case BaselineButtonTone.ink:
+        return const _ButtonColors(
+          BaselineColors.nightCourt,
+          BaselineColors.line,
+        );
       case BaselineButtonTone.outline:
         return onDark
             ? const _ButtonColors(Colors.transparent, BaselineColors.line)
-            : const _ButtonColors(Colors.transparent, BaselineColors.fairway);
+            : const _ButtonColors(
+                Colors.transparent,
+                BaselineColors.fairwayPressed,
+              );
     }
   }
 }

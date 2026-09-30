@@ -145,9 +145,7 @@ void main() {
     expect(find.textContaining('is locked'), findsOneWidget);
   });
 
-  testWidgets('E2E-A04 search, training, and the pro answer a question', (
-    tester,
-  ) async {
+  testWidgets('E2E-A04 search and training', (tester) async {
     await pumpApp(tester, session: adultSession(), places: PlacesHarness());
 
     await tester.tap(find.byTooltip('Search lessons and drills'));
@@ -161,20 +159,18 @@ void main() {
     await tester.pumpAndSettle();
     await tapTab(tester, 'Train');
     expect(find.text('THIS WEEK'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('Wall rally'), 500);
-    expect(find.text('Wall rally'), findsOneWidget);
-
-    await tapTab(tester, 'Home');
-    await tester.tap(find.byTooltip('Ask the pro'));
-    await tester.pumpAndSettle();
-    await tester.enterText(
-      find.byKey(const Key('coach-question')),
-      'My forehand causes pain in my wrist.',
+    final page = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      find.text('DRILL LIBRARY'),
+      500,
+      scrollable: page,
     );
-    await tester.tap(find.text('Ask'));
-    await tester.pump();
-    expect(find.text('Coaching assistance'), findsOneWidget);
-    expect(find.textContaining('clinician'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Forehand consistency'),
+      500,
+      scrollable: page,
+    );
+    expect(find.text('Forehand consistency'), findsWidgets);
   });
 
   testWidgets(

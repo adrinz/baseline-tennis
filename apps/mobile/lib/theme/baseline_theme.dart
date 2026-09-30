@@ -1,4 +1,5 @@
 import 'package:baseline/theme/baseline_colors.dart';
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,6 +9,7 @@ ThemeData buildBaselineTheme() {
   const fairway = BaselineColors.fairway;
   const night = BaselineColors.nightCourt;
   const ball = BaselineColors.ball;
+  const fairwayText = BaselineColors.fairwayPressed;
 
   const textTheme = TextTheme(
     displayLarge: TextStyle(
@@ -110,6 +112,30 @@ ThemeData buildBaselineTheme() {
       scrolledUnderElevation: 0,
       centerTitle: false,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
+      titleTextStyle: TextStyle(
+        fontFamily: 'Barlow Condensed',
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.2,
+        color: ink,
+      ),
+    ),
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      },
+    ),
+    splashFactory: InkRipple.splashFactory,
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: fairwayText,
+        textStyle: const TextStyle(
+          fontFamily: 'Source Sans 3',
+          fontWeight: FontWeight.w700,
+          fontSize: 15,
+        ),
+      ),
     ),
     dividerColor: ink.withValues(alpha: 0.16),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
@@ -123,15 +149,15 @@ ThemeData buildBaselineTheme() {
       labelStyle: const TextStyle(color: ink, fontWeight: FontWeight.w600),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: ink.withValues(alpha: 0.16)),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: ink.withValues(alpha: 0.12)),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: ink.withValues(alpha: 0.16)),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: ink.withValues(alpha: 0.12)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: fairway, width: 2),
       ),
     ),
@@ -146,6 +172,48 @@ ThemeData buildBaselineTheme() {
 }
 
 abstract final class BaselineType {
+  static const screenTitle = TextStyle(
+    fontFamily: 'Barlow Condensed',
+    fontSize: 36,
+    height: 1.05,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.4,
+    color: BaselineColors.ink,
+  );
+
+  static const section = TextStyle(
+    fontFamily: 'Barlow Condensed',
+    fontSize: 20,
+    height: 1.1,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1.2,
+    color: BaselineColors.ink,
+  );
+
+  static const heroTitle = TextStyle(
+    fontFamily: 'Barlow Condensed',
+    fontSize: 32,
+    height: 1.05,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.2,
+    color: BaselineColors.line,
+  );
+
+  static const lead = TextStyle(
+    fontFamily: 'Source Sans 3',
+    fontSize: 18,
+    height: 1.5,
+    color: BaselineColors.ink,
+  );
+
+  static const stat = TextStyle(
+    fontFamily: 'Barlow Condensed',
+    fontSize: 28,
+    height: 1.0,
+    fontWeight: FontWeight.w700,
+    color: BaselineColors.ink,
+  );
+
   static const eyebrow = TextStyle(
     fontFamily: 'Barlow Condensed',
     fontSize: 13,
@@ -154,7 +222,13 @@ abstract final class BaselineType {
     color: BaselineColors.muted,
   );
 
-  static const eyebrowFairway = eyebrow;
+  static const eyebrowFairway = TextStyle(
+    fontFamily: 'Barlow Condensed',
+    fontSize: 13,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1.4,
+    color: BaselineColors.fairwayPressed,
+  );
 
   static const eyebrowOnNight = TextStyle(
     fontFamily: 'Barlow Condensed',

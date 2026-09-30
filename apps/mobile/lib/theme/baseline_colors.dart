@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Brand tokens from the design system.
 ///
-/// Night court is chrome (welcome, tab bar, paywall), not the page.
+/// Night court is chrome (welcome, tab bar, hero cards), not the page.
 /// Cream (`line`) is the page. The ball marks the next action on a dark surface.
 class BaselineColors extends ThemeExtension<BaselineColors> {
   const BaselineColors();
@@ -20,12 +20,39 @@ class BaselineColors extends ThemeExtension<BaselineColors> {
   static const fairwayPressed = Color(0xFF18643F);
   static const clayDeep = Color(0xFF7A3424);
   static const nightRaised = Color(0xFF173028);
+  static const nightGlow = Color(0xFF1F4A3B);
+  static const fairwaySoft = Color(0xFFE2F0E7);
+  static const claySoft = Color(0xFFF7E6DD);
+  static const ballSoft = Color(0xFFF3F9C8);
 
   @override
   BaselineColors copyWith() => const BaselineColors();
 
   @override
   BaselineColors lerp(ThemeExtension<BaselineColors>? other, double t) => this;
+}
+
+abstract final class BaselineShadows {
+  static final card = [
+    BoxShadow(
+      color: BaselineColors.nightCourt.withValues(alpha: 0.06),
+      blurRadius: 18,
+      offset: const Offset(0, 8),
+    ),
+    BoxShadow(
+      color: BaselineColors.nightCourt.withValues(alpha: 0.04),
+      blurRadius: 3,
+      offset: const Offset(0, 1),
+    ),
+  ];
+
+  static final lift = [
+    BoxShadow(
+      color: BaselineColors.nightCourt.withValues(alpha: 0.28),
+      blurRadius: 28,
+      offset: const Offset(0, 14),
+    ),
+  ];
 }
 
 /// Minimum interactive size. 48dp sits above the 44pt floor.

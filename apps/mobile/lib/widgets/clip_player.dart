@@ -2,6 +2,9 @@ import 'package:baseline/data/nearby_places.dart';
 import 'package:baseline/data/videos.dart';
 import 'package:baseline/theme/baseline_colors.dart';
 import 'package:baseline/theme/baseline_theme.dart';
+import 'package:baseline/widgets/hero_card.dart';
+import 'package:baseline/widgets/pill.dart';
+import 'package:baseline/widgets/pressable.dart';
 import 'package:baseline/widgets/scaled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -105,13 +108,17 @@ class _DemonstrationCardState extends State<DemonstrationCard> {
               controller.value.duration.inMilliseconds
         : 0.0;
 
-    return Material(
-      color: BaselineColors.card,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: BaselineColors.ink.withValues(alpha: 0.16)),
+    final radius = BorderRadius.circular(24);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: radius,
+        boxShadow: BaselineShadows.card,
+      ),
+      child: Material(
+        color: BaselineColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: radius,
+          side: BorderSide(color: BaselineColors.ink.withValues(alpha: 0.08)),
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -122,7 +129,10 @@ class _DemonstrationCardState extends State<DemonstrationCard> {
               label:
                   '${playing ? 'Pause' : 'Play'} ${video.title}, ${video.durationLabel}. Credit ${video.creator}.',
               child: InkWell(
-                onTap: _toggle,
+                onTap: () {
+                  tapFeedback();
+                  _toggle();
+                },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -132,6 +142,7 @@ class _DemonstrationCardState extends State<DemonstrationCard> {
                         color: BaselineColors.nightCourt,
                         child: Stack(
                           alignment: Alignment.center,
+                          fit: StackFit.expand,
                           children: [
                             if (ready)
                               FittedBox(
@@ -141,13 +152,67 @@ class _DemonstrationCardState extends State<DemonstrationCard> {
                                   height: controller.value.size.height,
                                   child: VideoPlayer(controller),
                                 ),
+                              )
+                            else
+                              const DecoratedBox(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      BaselineColors.nightGlow,
+                                      BaselineColors.nightCourt,
+                                    ],
+                                  ),
+                                ),
                               ),
-                            Icon(
-                              playing
-                                  ? Icons.pause_circle_filled
-                                  : Icons.play_circle_fill,
-                              color: BaselineColors.ball,
-                              size: playing ? 36 : 56,
+                            if (!ready)
+                              const Positioned(
+                                right: -10,
+                                top: -30,
+                                width: 90,
+                                height: 200,
+                                child: CourtLines(opacity: 0.1),
+                              ),
+                            Center(
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 180),
+                                child: playing
+                                    ? const SizedBox.shrink(key: ValueKey('p'))
+                                    : const _PlayBadge(key: ValueKey('i')),
+                              ),
+                            ),
+                            Positioned(
+                              left: 12,
+                              top: 12,
+                              child: const Pill(
+                                'DEMONSTRATION',
+                                tone: PillTone.night,
+                              ),
+                            ),
+                            Positioned(
+                              right: 12,
+                              bottom: 12,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.55),
+                                  borderRadius: BorderRadius.circular(99),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  child: ScaledText(
+                                    video.durationLabel,
+                                    style: const TextStyle(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: BaselineColors.line,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             if (_failed)
                               const Padding(
@@ -169,96 +234,126 @@ class _DemonstrationCardState extends State<DemonstrationCard> {
                         backgroundColor: BaselineColors.nightCourt,
                       ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const ScaledText(
-                            'DEMONSTRATION',
-                            style: BaselineType.eyebrowFairway,
-                          ),
-                          const SizedBox(height: 4),
-                          ScaledText(
-                            video.title,
-                            style: BaselineType.cardTitle,
-                          ),
-                          const SizedBox(height: 4),
-                          ScaledText(
-                            video.durationLabel,
-                            style: BaselineType.cardBody,
-                          ),
-                        ],
+                      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+                      child: ScaledText(
+                        video.title,
+                        style: BaselineType.cardTitle.copyWith(fontSize: 18),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(14, 12, 14, 0),
-              child: ScaledText('CREDIT', style: BaselineType.eyebrowFairway),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 4, 14, 0),
-              child: ScaledText(video.creator, style: BaselineType.cardTitle),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 4, 14, 0),
-              child: ScaledText(
-                '${video.source} · ${video.license}',
-                style: BaselineType.cardBody,
-              ),
-            ),
-            if (video.narration.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14, 4, 14, 0),
-                child: ScaledText(
-                  'Narration: ${video.narration}.',
-                  style: BaselineType.cardMuted,
-                ),
-              ),
-            if (video.adaptation.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14, 4, 14, 0),
-                child: ScaledText(
-                  video.adaptation,
-                  style: BaselineType.cardMuted,
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
-              child: Wrap(
-                children: [
-                  if (video.pageUrl.isNotEmpty)
-                    TextButton(
-                      onPressed: () => openExternal(video.pageUrl),
-                      child: const ScaledText('Original'),
+            ColoredBox(
+              color: BaselineColors.line,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const ScaledText(
+                      'CREDIT',
+                      style: BaselineType.eyebrowFairway,
                     ),
-                  if (video.licenseUrl.isNotEmpty)
-                    TextButton(
-                      onPressed: () => openExternal(video.licenseUrl),
-                      child: const ScaledText('License'),
+                    const SizedBox(height: 2),
+                    ScaledText(
+                      video.creator,
+                      style: BaselineType.cardTitle.copyWith(fontSize: 15),
                     ),
-                  if (video.transcript.isNotEmpty)
-                    TextButton(
-                      onPressed: () =>
-                          setState(() => _showTranscript = !_showTranscript),
-                      child: ScaledText(
-                        _showTranscript ? 'Hide transcript' : 'Transcript',
+                    const SizedBox(height: 2),
+                    ScaledText(
+                      '${video.source} · ${video.license}',
+                      style: BaselineType.cardMuted.copyWith(fontSize: 13.5),
+                    ),
+                    if (video.narration.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: ScaledText(
+                          'Narration: ${video.narration}.',
+                          style: BaselineType.cardMuted,
+                        ),
                       ),
-                    ),
-                ],
-              ),
-            ),
-            if (_showTranscript)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-                child: ScaledText(
-                  video.transcript,
-                  style: BaselineType.cardBody,
+                    if (video.adaptation.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: ScaledText(
+                          video.adaptation,
+                          style: BaselineType.cardMuted,
+                        ),
+                      ),
+                  ],
                 ),
               ),
+            ),
+            ColoredBox(
+              color: BaselineColors.line,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 6),
+                child: Wrap(
+                  children: [
+                    if (video.pageUrl.isNotEmpty)
+                      TextButton(
+                        onPressed: () => openExternal(video.pageUrl),
+                        child: const ScaledText('Original'),
+                      ),
+                    if (video.licenseUrl.isNotEmpty)
+                      TextButton(
+                        onPressed: () => openExternal(video.licenseUrl),
+                        child: const ScaledText('License'),
+                      ),
+                    if (video.transcript.isNotEmpty)
+                      TextButton(
+                        onPressed: () =>
+                            setState(() => _showTranscript = !_showTranscript),
+                        child: ScaledText(
+                          _showTranscript ? 'Hide transcript' : 'Transcript',
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: _showTranscript
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                      child: ScaledText(
+                        video.transcript,
+                        style: BaselineType.cardBody,
+                      ),
+                    )
+                  : const SizedBox(width: double.infinity),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlayBadge extends StatelessWidget {
+  const _PlayBadge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const DecoratedBox(
+      decoration: BoxDecoration(
+        color: BaselineColors.ball,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(color: Color(0x66000000), blurRadius: 18, offset: Offset(0, 6)),
+        ],
+      ),
+      child: SizedBox(
+        width: 64,
+        height: 64,
+        child: Icon(
+          Icons.play_arrow_rounded,
+          size: 40,
+          color: BaselineColors.nightCourt,
         ),
       ),
     );

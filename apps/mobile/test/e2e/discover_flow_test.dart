@@ -147,7 +147,9 @@ void main() {
 
     await tapSemanticsButton(tester, 'Coaches');
     expect(
-      find.text('A wider distance keeps every coach from a shorter one.'),
+      find.text(
+        'Tennis coaches, instructors, academies, and clubs. A wider distance keeps every coach from a shorter one.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Avery Lane Tennis'), findsOneWidget);
@@ -172,7 +174,9 @@ void main() {
 
     await tapSemanticsButton(tester, 'Stores');
     expect(
-      find.text('A wider distance keeps every shop from a shorter one.'),
+      find.text(
+        'Tennis shops, stringers, and sporting-goods stores. A wider distance keeps every shop from a shorter one.',
+      ),
       findsOneWidget,
     );
     expect(find.text('String and Grip Shop'), findsOneWidget);
@@ -192,18 +196,15 @@ void main() {
 
     await tapSemanticsButton(tester, 'Players');
     expect(find.text('Discoverable'), findsOneWidget);
-    expect(
-      find.textContaining('No other players within 5 miles'),
-      findsOneWidget,
-    );
+    expect(find.text('Park Ave Tennis'), findsOneWidget);
+    expect(find.text('Deer Park Tennis Club'), findsNothing);
     expect(find.textContaining('exact location stays hidden'), findsOneWidget);
-    expect(places.searchMiles('players'), isEmpty);
+    expect(places.searchMiles('players'), [5]);
 
     await tapSemanticsButton(tester, '10 mi, search radius');
-    expect(
-      find.textContaining('No other players within 10 miles'),
-      findsOneWidget,
-    );
+    expect(places.searchMiles('players'), [5, 10]);
+    expect(find.text('Park Ave Tennis'), findsOneWidget);
+    expect(find.text('Deer Park Tennis Club'), findsOneWidget);
     expect(
       find.textContaining(
         'A wider distance includes everyone from a shorter one',

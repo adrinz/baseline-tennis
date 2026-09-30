@@ -3,6 +3,8 @@ import 'package:baseline/state/player_session.dart';
 import 'package:baseline/state/session_controller.dart';
 import 'package:baseline/theme/baseline_colors.dart';
 import 'package:baseline/theme/baseline_theme.dart';
+import 'package:baseline/widgets/pressable.dart';
+import 'package:baseline/widgets/progress.dart';
 import 'package:baseline/widgets/scaled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,37 +59,49 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             children: [
               Semantics(
                 label: 'Question ${_index + 1} of 4',
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(99),
-                  child: LinearProgressIndicator(
-                    value: (_index + 1) / 4,
-                    minHeight: 8,
-                    backgroundColor: BaselineColors.track,
-                    color: BaselineColors.fairway,
-                  ),
-                ),
+                child: SlimBar(value: (_index + 1) / 4, height: 8),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               const ScaledText(
                 'Levels are guidelines. You can change yours later in Profile.',
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.35,
-                  color: BaselineColors.ink,
+                  color: BaselineColors.muted,
                 ),
               ),
               const SizedBox(height: 20),
-              Expanded(child: _question(session)),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 260),
+                  switchInCurve: Curves.easeOutCubic,
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.04, 0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  ),
+                  child: KeyedSubtree(
+                    key: ValueKey(_index),
+                    child: _question(session),
+                  ),
+                ),
+              ),
               if (_index > 0)
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: TextButton(
+                  child: TextButton.icon(
                     style: TextButton.styleFrom(
                       minimumSize: const Size(kMinTapTarget, kMinTapTarget),
                       foregroundColor: BaselineColors.ink,
                     ),
                     onPressed: () => setState(() => _index -= 1),
-                    child: const ScaledText('Back'),
+                    icon: const Icon(Icons.arrow_back_rounded, size: 20),
+                    label: const ScaledText('Back'),
                   ),
                 ),
             ],
@@ -158,7 +172,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }) {
     return ListView(
       children: [
-        ScaledText(title, style: Theme.of(context).textTheme.headlineMedium),
+        ScaledText(title, style: BaselineType.screenTitle),
         if (subtitle != null) ...[
           const SizedBox(height: 8),
           ScaledText(
@@ -166,11 +180,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             style: const TextStyle(
               fontSize: 15,
               height: 1.4,
-              color: BaselineColors.ink,
+              color: BaselineColors.muted,
             ),
           ),
         ],
-        const SizedBox(height: 20),
+        const SizedBox(height: 22),
         for (final option in options) ...[
           _OptionButton(
             label: option,
@@ -202,30 +216,72 @@ class _OptionButton extends StatelessWidget {
       selected: selected,
       label: label,
       child: ExcludeSemantics(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: kMinTapTarget),
-          child: Material(
-            color: BaselineColors.card,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-              side: BorderSide(
-                color: selected
-                    ? BaselineColors.ink
-                    : BaselineColors.ink.withValues(alpha: 0.16),
-                width: selected ? 2 : 1,
-              ),
-            ),
-            child: InkWell(
-              onTap: onPressed,
-              borderRadius: BorderRadius.circular(14),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
+        child: PressScale(
+          scale: 0.98,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: kMinTapTarget + 8),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              decoration: BoxDecoration(
+                color: selected ? BaselineColors.fairwaySoft : BaselineColors.card,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: selected
+                      ? BaselineColors.fairway
+                      : BaselineColors.ink.withValues(alpha: 0.1),
+                  width: selected ? 2 : 1,
                 ),
-                child: ScaledText(
-                  label,
-                  style: BaselineType.cardTitle.copyWith(fontSize: 17),
+                boxShadow: selected ? null : BaselineShadows.card,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    tapFeedback();
+                    onPressed();
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 16,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ScaledText(
+                            label,
+                            style: BaselineType.cardTitle.copyWith(fontSize: 17),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: selected
+                                ? BaselineColors.fairway
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: selected
+                                  ? BaselineColors.fairway
+                                  : BaselineColors.mist,
+                              width: 2,
+                            ),
+                          ),
+                          child: selected
+                              ? const Icon(
+                                  Icons.check,
+                                  size: 16,
+                                  color: BaselineColors.line,
+                                )
+                              : null,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
