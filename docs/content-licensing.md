@@ -30,7 +30,7 @@ The admin publish action and the database check both enforce this. A lesson can 
 
 ## Seed content
 
-`content/seed/` holds original starter lessons, drills, glossary terms, and coach rules so the app runs without third-party video. Videos can be attached later by an editor.
+`content/seed/` holds original starter lessons, drills, glossary terms, and coach rules. The mobile build also includes original Baseline diagram clips; third-party video can be attached later only after an editor records and verifies its license.
 
 Technique families to cover over time:
 
@@ -40,7 +40,7 @@ Technique families to cover over time:
 - Serve phases and serve types, return patterns
 - Lob, drop shot, passing shot, angle, and rallying fundamentals
 
-MVP seed priority: every Level 1 topic has a lesson. Level 2 and 3 have a published lesson for each main stroke plus rallying, serve, and a strategy article. The rest of the catalog exists as draft titles editors can fill.
+MVP seed priority: every Level 1 topic has a lesson. Levels 2 and 3 have published lessons for the main strokes, rallying, serve, footwork, and strategy. Levels 4 and 5 remain a smaller path with fewer published lessons that editors can extend.
 
 ## Recommendations vs ads
 

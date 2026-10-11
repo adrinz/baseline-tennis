@@ -68,13 +68,20 @@ class MatchLog {
   }
 }
 
+const _keep = Object();
+
 class PlayerSession {
   const PlayerSession({
     this.authProvider,
     this.email,
+    this.givenName,
+    this.subject,
     this.birthYear,
     this.playedBefore,
     this.level = 1,
+    this.skillRating,
+    this.accessToken,
+    this.refreshToken,
     this.goal,
     this.daysPerWeek = 3,
     this.onboardingComplete = false,
@@ -93,9 +100,16 @@ class PlayerSession {
 
   final AuthProvider? authProvider;
   final String? email;
+  final String? givenName;
+  final String? subject;
   final int? birthYear;
   final String? playedBefore;
   final int level;
+
+  /// An NTRP value such as `3.5`, or `rough:<id>` for a band without a number.
+  final String? skillRating;
+  final String? accessToken;
+  final String? refreshToken;
   final String? goal;
   final int daysPerWeek;
   final bool onboardingComplete;
@@ -113,6 +127,15 @@ class PlayerSession {
 
   bool get signedIn => authProvider != null;
 
+  /// First name for the home greeting. Uses the saved sign-in name, then the email.
+  String? get greetingName {
+    final saved = givenName?.trim();
+    if (saved != null && saved.isNotEmpty) return saved;
+    final mail = email;
+    if (mail == null) return null;
+    return firstNameFromEmail(mail);
+  }
+
   int? get ageYears {
     final year = birthYear;
     if (year == null) return null;
@@ -124,9 +147,14 @@ class PlayerSession {
   PlayerSession copyWith({
     AuthProvider? authProvider,
     String? email,
+    String? givenName,
+    String? subject,
     int? birthYear,
     String? playedBefore,
     int? level,
+    Object? skillRating = _keep,
+    String? accessToken,
+    String? refreshToken,
     String? goal,
     int? daysPerWeek,
     bool? onboardingComplete,
@@ -145,9 +173,16 @@ class PlayerSession {
     return PlayerSession(
       authProvider: authProvider ?? this.authProvider,
       email: email ?? this.email,
+      givenName: givenName ?? this.givenName,
+      subject: subject ?? this.subject,
       birthYear: birthYear ?? this.birthYear,
       playedBefore: playedBefore ?? this.playedBefore,
       level: level ?? this.level,
+      skillRating: identical(skillRating, _keep)
+          ? this.skillRating
+          : skillRating as String?,
+      accessToken: accessToken ?? this.accessToken,
+      refreshToken: refreshToken ?? this.refreshToken,
       goal: goal ?? this.goal,
       daysPerWeek: daysPerWeek ?? this.daysPerWeek,
       onboardingComplete: onboardingComplete ?? this.onboardingComplete,
@@ -167,6 +202,18 @@ class PlayerSession {
 }
 
 const _authPaths = {'/welcome', '/sign-in', '/email', '/code'};
+
+/// First name from an email, such as john.smith@club.com → John.
+String? firstNameFromEmail(String email) {
+  final local = email.split('@').first.trim();
+  if (local.isEmpty) return null;
+  final token = local.split(RegExp(r'[^A-Za-z]+')).firstWhere(
+    (part) => part.isNotEmpty,
+    orElse: () => '',
+  );
+  if (token.length < 2) return null;
+  return '${token[0].toUpperCase()}${token.substring(1).toLowerCase()}';
+}
 
 String? sessionRedirect(PlayerSession session, String path) {
   if (path == '/') return '/welcome';

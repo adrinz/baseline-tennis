@@ -1,4 +1,5 @@
 import 'package:baseline/data/catalog.dart';
+import 'package:baseline/data/ntrp.dart';
 import 'package:baseline/logic/age.dart';
 import 'package:baseline/logic/progress.dart';
 import 'package:baseline/state/player_session.dart';
@@ -237,6 +238,13 @@ class ProfileScreen extends ConsumerWidget {
               'MORE',
               padding: EdgeInsets.only(top: 22, bottom: 8),
             ),
+            NavRow(
+              label: 'Skill rating',
+              detail: skillRatingDetail(session.skillRating) ?? 'USTA NTRP and rough levels',
+              icon: Icons.speed_rounded,
+              onTap: () => context.push('/profile/rating'),
+            ),
+            const SizedBox(height: 8),
             NavRow(
               label: 'Privacy',
               icon: Icons.shield_outlined,

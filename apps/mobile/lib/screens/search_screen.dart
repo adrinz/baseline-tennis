@@ -108,20 +108,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-          if (videos.isNotEmpty) ...[
-            const SectionHeader('VIDEOS'),
-            for (final video in videos) ...[
-              _ResultTile(
-                icon: Icons.play_arrow_rounded,
-                tone: PillTone.night,
-                title: video.title,
-                subtitle: '${video.durationLabel} · ${video.attribution}',
-                semantics: video.title,
-                onTap: () => context.push('/video/${video.id}'),
-              ),
-              const SizedBox(height: 8),
-            ],
-          ],
           if (lessons.isNotEmpty) ...[
             const SectionHeader('LESSONS'),
             for (final lesson in lessons) ...[
@@ -146,6 +132,20 @@ class _SearchScreenState extends State<SearchScreen> {
                 subtitle: drill.objective,
                 semantics: drill.name,
                 onTap: () => context.go('/train/drill/${drill.slug}'),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ],
+          if (videos.isNotEmpty) ...[
+            const SectionHeader('VIDEOS'),
+            for (final video in videos) ...[
+              _ResultTile(
+                icon: Icons.play_arrow_rounded,
+                tone: PillTone.night,
+                title: video.title,
+                subtitle: '${video.durationLabel} · ${video.attribution}',
+                semantics: video.title,
+                onTap: () => context.push('/video/${video.id}'),
               ),
               const SizedBox(height: 8),
             ],

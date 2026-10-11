@@ -34,7 +34,59 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _resolveLiveLocation();
+      _fillSignInName();
     });
+  }
+
+  var _askedForName = false;
+
+  Future<void> _fillSignInName() async {
+    if (_askedForName) return;
+    final session = ref.read(sessionProvider);
+    if (!session.signedIn || session.greetingName != null) return;
+    _askedForName = true;
+    if (!mounted) return;
+    final typed = await _askFirstName();
+    if (!mounted || typed == null) return;
+    ref.read(sessionProvider.notifier).setGivenName(typed);
+  }
+
+  Future<String?> _askFirstName() {
+    final controller = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: BaselineColors.line,
+        title: const ScaledText('Your name', style: BaselineType.cardTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ScaledText(
+              'Sign in did not include a first name. Baseline uses it in your greeting.',
+              style: BaselineType.cardBody,
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              textCapitalization: TextCapitalization.words,
+              decoration: const InputDecoration(hintText: 'First name'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const ScaledText('Not now'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+            child: const ScaledText('Save'),
+          ),
+        ],
+      ),
+    ).whenComplete(controller.dispose);
   }
 
   Future<void> _resolveLiveLocation() async {
@@ -68,7 +120,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 14),
             FadeSlideIn(
               child: ScaledText(
-                timeGreeting(DateTime.now()),
+                greetingLine(DateTime.now(), session.greetingName),
                 style: BaselineType.screenTitle,
               ),
             ),

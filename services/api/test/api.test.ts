@@ -105,6 +105,68 @@ test('age gate rejects players under 16', async () => {
   });
 });
 
+test('authenticated learning reads include the mobile catalog additions', async () => {
+  const lessonSlugs = [
+    'serve-plus-one',
+    'inside-out-forehand',
+    'crossover-step',
+    'kick-serve',
+    'angle-shot',
+    'neutral-ball',
+    'flat-serve',
+    'slice-serve',
+    'return-positioning',
+    'backhand-slice',
+    'forehand-down-the-line',
+    'cross-court-forehand',
+    'swing-volley',
+    'drop-volley',
+    'serve-and-volley',
+    'doubles-formation',
+    'poaching',
+    'tiebreak-strategy',
+  ];
+  const glossaryTerms = [
+    'Break point',
+    'Deuce court',
+    'Ad court',
+    'Continental grip',
+    'Eastern grip',
+    'Sweet spot',
+    'Split step',
+    'Recovery position',
+    'Approach shot',
+    'Passing shot',
+    'Kick serve',
+    'Serve plus one',
+  ];
+
+  await withApp(async (app) => {
+    const account = await signIn(app, 'mobile-catalog@example.com', { birthYear: 1990 });
+    const headers = authHeader(account.accessToken);
+
+    const lessons = await app.inject({ method: 'GET', url: '/v1/lessons', headers });
+    assert.equal(lessons.statusCode, 200, lessons.body);
+    const lessonRows = lessons.json().lessons as Array<{ slug: string; technique: string | null }>;
+    const lessonsBySlug = new Map(lessonRows.map((lesson) => [lesson.slug, lesson]));
+    for (const slug of lessonSlugs) {
+      assert.equal(lessonsBySlug.get(slug)?.technique, slug);
+    }
+
+    const techniques = await app.inject({ method: 'GET', url: '/v1/techniques', headers });
+    assert.equal(techniques.statusCode, 200, techniques.body);
+    const techniqueSlugs = new Set(
+      (techniques.json().techniques as Array<{ slug: string }>).map((technique) => technique.slug),
+    );
+    for (const slug of lessonSlugs) assert.equal(techniqueSlugs.has(slug), true, slug);
+
+    const glossary = await app.inject({ method: 'GET', url: '/v1/glossary', headers });
+    assert.equal(glossary.statusCode, 200, glossary.body);
+    const terms = new Set((glossary.json().terms as Array<{ term: string }>).map((entry) => entry.term));
+    for (const term of glossaryTerms) assert.equal(terms.has(term), true, term);
+  });
+});
+
 test('player cards expose a distance band and no coordinates', async () => {
   const card = toPlayerCard(
     {
@@ -473,11 +535,11 @@ test('health, provider stubs, and search respond', async () => {
     assert.equal(health.json().ok, true);
 
     const apple = await app.inject({ method: 'POST', url: '/v1/auth/apple', payload: {} });
-    assert.equal(apple.statusCode, 501);
-    assert.equal(apple.json().error.code, 'not_configured');
+    assert.equal(apple.statusCode, 401);
+    assert.equal(apple.json().error.code, 'unauthorized');
     const google = await app.inject({ method: 'POST', url: '/v1/auth/google', payload: {} });
-    assert.equal(google.statusCode, 501);
-    assert.equal(google.json().error.code, 'not_configured');
+    assert.equal(google.statusCode, 401);
+    assert.equal(google.json().error.code, 'unauthorized');
 
     const session = await signIn(app, 'search@example.com', { birthYear: 1990, displayName: 'Searcher' });
     const search = await app.inject({

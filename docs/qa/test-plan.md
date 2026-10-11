@@ -69,7 +69,7 @@ All of the following are true before the build is uploaded to TestFlight.
 
 1. The commit’s CI run is green: API lint, typecheck, unit tests, migration on a fresh database, Flutter analyze, Flutter unit tests, admin typecheck.
 2. Staging migrations are applied.
-3. Seed content is published, not left in draft. The content bar for this build is at least 12 original Level 1 lessons, 10 Level 2 lessons, 8 Level 3 lessons, and 15 drills. The drill set includes wall rally, cross-court rally, forehand consistency, backhand consistency, serve targets, split step, and a figure-8 footwork pattern. The glossary and the coach rules for “into the net,” “into the fence,” and “can’t toss” are loaded.
+3. Seed content is published, not left in draft. The content bar for this build remains at least 12 original Level 1 lessons, 10 Level 2 lessons, 8 Level 3 lessons, and 15 drills; the current Learn catalog also covers 14 Level 2 lessons, 18 Level 3 lessons, 3 Level 4 lessons, 38 techniques, 26 glossary terms, and 81 demonstrations. The drill set includes wall rally, cross-court rally, forehand consistency, backhand consistency, serve targets, split step, and a figure-8 footwork pattern. The glossary and the coach rules for “into the net,” “into the fence,” and “can’t toss” are loaded.
 4. The license report shows zero published videos with an empty license. Zero videos is acceptable when every lesson stands on text. Placeholder copyrighted clips are not in the build.
 5. RevenueCat offerings match the paywall products. The app reads the entitlement. It does not hard-code a price.
 6. Privacy policy and terms URLs open from Welcome and from Profile.

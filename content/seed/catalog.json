@@ -373,6 +373,288 @@
         { "kind": "overview", "body": "The second serve uses the same toss as the first, a little more in front. Brush up the back of the ball so it dips into a big target." },
         { "kind": "steps", "body": "1. Keep the motion the same as the first serve. 2. Toss slightly in front. 3. Brush up the ball and aim for a large target in the box. 4. Catch a bad toss instead of pushing it in." }
       ]
+    },
+    {
+      "slug": "serve-plus-one",
+      "level": 4,
+      "title": "Serve plus one",
+      "category": "strategy",
+      "technique": "serve-plus-one",
+      "freeTier": false,
+      "estimatedMinutes": 14,
+      "summary": "Pair a purposeful serve with the first ball you expect to hit.",
+      "blocks": [
+        { "kind": "overview", "body": "Serve plus one is a two-shot plan: use the serve to create a manageable reply, then attack the first ball you receive. The goal is a repeatable pattern, not a winner on every point." },
+        { "kind": "steps", "body": "1. Choose a serve target that moves or jams the returner. 2. Recover to a balanced position after landing. 3. Read the return and move early to your planned side. 4. Play the first ball deep to open space, then recover." },
+        { "kind": "mistakes", "body": "Serving hard without a next-shot position, or trying to finish the point before the return gives you an opening." }
+      ]
+    },
+    {
+      "slug": "inside-out-forehand",
+      "level": 3,
+      "title": "Inside-out forehand",
+      "category": "technique",
+      "technique": "inside-out-forehand",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "Run around the backhand corner to attack with a forehand cross-court.",
+      "blocks": [
+        { "kind": "why", "body": "An inside-out forehand lets you use a comfortable forehand while sending the ball diagonally to the opponent's backhand. It is useful when you have time to move around the ball." },
+        { "kind": "steps", "body": "1. Recognize a ball that gives you time to move left or right. 2. Use small adjustment steps to get your body beside the ball. 3. Contact in front and send the ball cross-court with height. 4. Recover toward the middle before the reply." },
+        { "kind": "mistakes", "body": "Running around a ball that is too fast, or drifting so far out of position that the open court is unprotected." }
+      ]
+    },
+    {
+      "slug": "crossover-step",
+      "level": 3,
+      "title": "Crossover step",
+      "category": "technique",
+      "technique": "crossover-step",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Cover more court with a confident crossover before you set up the swing.",
+      "blocks": [
+        { "kind": "overview", "body": "A crossover step is a traveling step for a larger move. One foot crosses over the other so you can cover ground quickly, then smaller steps put you in hitting position." },
+        { "kind": "steps", "body": "1. Push off the outside foot toward the ball. 2. Cross the moving foot over the other without turning your chest away from the court. 3. Use quick adjustment steps to find spacing. 4. Plant, swing, and recover with a split step." },
+        { "kind": "tips", "body": "Use a crossover for distance, not for every adjustment. Keep the racket prepared while the feet do the traveling." }
+      ]
+    },
+    {
+      "slug": "kick-serve",
+      "level": 4,
+      "title": "Kick serve",
+      "category": "technique",
+      "technique": "kick-serve",
+      "freeTier": false,
+      "estimatedMinutes": 14,
+      "summary": "Brush up the ball to create a high-bouncing serve with a safe margin.",
+      "blocks": [
+        { "kind": "overview", "body": "A kick serve uses upward brushing and spin to make the ball clear the net with room, then jump up after the bounce. It is a useful second-serve shape when you can repeat the toss and finish." },
+        { "kind": "steps", "body": "1. Use a consistent toss slightly above and in front of your hitting side. 2. Reach up and brush from low to high behind the ball. 3. Aim high over the net toward a large service-box target. 4. Land balanced and get ready for the return." },
+        { "kind": "mistakes", "body": "Tossing behind the head, forcing sideways action with the wrist, or chasing extra speed before the ball has reliable shape." }
+      ]
+    },
+    {
+      "slug": "angle-shot",
+      "level": 3,
+      "title": "Angle shot",
+      "category": "strategy",
+      "technique": "angle-shot",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Use a shorter cross-court path to pull your opponent off the court.",
+      "blocks": [
+        { "kind": "overview", "body": "An angle shot travels cross-court and lands closer to the sideline than a neutral rally ball. The shorter path can open the court, but it leaves less room for error." },
+        { "kind": "steps", "body": "1. Wait for a ball you can reach comfortably. 2. Prepare early and keep the contact in front. 3. Use a compact swing with enough net clearance. 4. Recover for the next ball instead of admiring the angle." },
+        { "kind": "tips", "body": "Choose the angle when your opponent is deep or out of position. A safer cross-court ball is better when you are stretched or late." }
+      ]
+    },
+    {
+      "slug": "neutral-ball",
+      "level": 3,
+      "title": "Neutral ball",
+      "category": "strategy",
+      "technique": "neutral-ball",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Recognize the middle of a point and choose a reliable ball over a risky attack.",
+      "blocks": [
+        { "kind": "overview", "body": "A neutral ball is neither an obvious attack nor a desperate defense. It keeps you balanced, clears the net safely, and asks the opponent to create the next opening." },
+        { "kind": "steps", "body": "1. Check whether the ball is comfortable but not short. 2. Aim cross-court with height and a dependable margin. 3. Recover to your ready position after contact. 4. Attack only when the next ball gives you time and space." },
+        { "kind": "mistakes", "body": "Treating every comfortable ball as a winner, or playing so defensively that the opponent gets an easy short ball." }
+      ]
+    },
+    {
+      "slug": "flat-serve",
+      "level": 2,
+      "title": "Flat serve",
+      "category": "technique",
+      "technique": "flat-serve",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "Drive a first serve through the box with a high, repeatable contact.",
+      "blocks": [
+        { "kind": "overview", "body": "A flat serve uses a mostly direct path through the ball for pace and a predictable bounce. Reliable direction and a repeatable toss matter more than trying to hit at maximum speed." },
+        { "kind": "steps", "body": "1. Start sideways with a continental grip. 2. Toss slightly in front of your hitting shoulder. 3. Reach up to contact at your highest comfortable point. 4. Land balanced inside the court and recover for the return." },
+        { "kind": "tips", "body": "Use a large target first, then narrow it toward the body or corner after the motion feels repeatable. Keep the tossing arm up while you drive to contact." },
+        { "kind": "mistakes", "body": "Chasing speed with a drifting toss, falling away from the ball, or aiming too close to the line before the serve is dependable." }
+      ]
+    },
+    {
+      "slug": "slice-serve",
+      "level": 3,
+      "title": "Slice serve",
+      "category": "technique",
+      "technique": "slice-serve",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "Curve the serve away from the returner with controlled sidespin.",
+      "blocks": [
+        { "kind": "overview", "body": "A slice serve combines pace with sidespin so the ball bends in flight and moves after the bounce. It is especially useful when a wide target can pull the returner off the court." },
+        { "kind": "steps", "body": "1. Keep the starting stance and toss consistent. 2. Toss a little toward the hitting side. 3. Brush around the outside of the ball while reaching up. 4. Land balanced and recover toward the middle." },
+        { "kind": "tips", "body": "Shape the serve with the swing path rather than a sudden wrist turn. Practice the wide target on both sides before adding more pace." },
+        { "kind": "mistakes", "body": "Tossing too far to the side, cutting down on the ball, or over-rotating so the serve loses its direction." }
+      ]
+    },
+    {
+      "slug": "return-positioning",
+      "level": 2,
+      "title": "Return positioning",
+      "category": "technique",
+      "technique": "return-positioning",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Choose a return spot that gives you time to read the serve and move forward.",
+      "blocks": [
+        { "kind": "overview", "body": "Your return position should match the server and your ability to handle pace. Start far enough back to see the ball, but be ready to step forward and take a shorter serve early." },
+        { "kind": "steps", "body": "1. Begin in a balanced stance with the racket in front. 2. Stand a little farther back for a fast serve or closer for a slower one. 3. Split step as the server contacts the ball. 4. Recover toward the middle after the return." },
+        { "kind": "tips", "body": "Use the baseline, your usual contact point, and the server’s toss as references. Adjust by small steps instead of making a large move during the serve motion." },
+        { "kind": "mistakes", "body": "Standing rigidly in one spot, drifting backward on every serve, or beginning the swing before you have read the direction." }
+      ]
+    },
+    {
+      "slug": "backhand-slice",
+      "level": 2,
+      "title": "Backhand slice",
+      "category": "technique",
+      "technique": "backhand-slice",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Use a firm, gliding backhand slice to keep the ball low and controlled.",
+      "blocks": [
+        { "kind": "overview", "body": "The backhand slice is a useful change of pace and a reliable answer to a low or awkward ball. A stable racket face and forward finish help the ball travel through the court instead of floating." },
+        { "kind": "steps", "body": "1. Turn the shoulders early and take the racket back slightly high. 2. Set the front shoulder toward the target. 3. Swing from high to low and brush under the ball in front. 4. Finish forward and recover to the ready position." },
+        { "kind": "tips", "body": "Keep the grip steady and let the arm length create the slice. Aim cross-court first, where the longer diagonal gives you more room." },
+        { "kind": "mistakes", "body": "Chopping straight down, opening the racket face too much, or contacting beside the body after the ball has passed you." }
+      ]
+    },
+    {
+      "slug": "forehand-down-the-line",
+      "level": 3,
+      "title": "Forehand down the line",
+      "category": "technique",
+      "technique": "forehand-down-the-line",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Change direction with a forehand that travels cleanly down the sideline.",
+      "blocks": [
+        { "kind": "overview", "body": "A down-the-line forehand changes the direction of a rally and can expose open court. It needs early preparation, comfortable spacing, and enough margin because the target is narrower than cross-court." },
+        { "kind": "steps", "body": "1. Wait for a ball that gives you time to set up. 2. Move beside the ball with small adjustment steps. 3. Contact in front and send the racket path toward the sideline. 4. Recover through the middle immediately after the swing." },
+        { "kind": "tips", "body": "Aim a little inside the sideline and clear the net with dependable height. Use the shot when you are balanced, not simply because you have hit several cross-court balls." },
+        { "kind": "mistakes", "body": "Changing direction while stretched, contacting late, or admiring the line and leaving the opposite side open." }
+      ]
+    },
+    {
+      "slug": "cross-court-forehand",
+      "level": 2,
+      "title": "Cross-court forehand",
+      "category": "technique",
+      "technique": "cross-court-forehand",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Build a safer forehand rally with height, depth, and the long diagonal.",
+      "blocks": [
+        { "kind": "overview", "body": "The cross-court forehand follows the longer diagonal and passes over the lower middle of the net. That combination gives a developing player more space while keeping the rally moving." },
+        { "kind": "steps", "body": "1. Prepare the racket before the bounce. 2. Set your feet so contact stays in front. 3. Swing low to high with safe net clearance. 4. Send the ball deep cross-court and recover toward the middle." },
+        { "kind": "tips", "body": "Picture a target inside the far sideline rather than the line itself. Add depth by finishing through the ball, not by swinging harder." },
+        { "kind": "mistakes", "body": "Aiming too close to the sideline, lifting without depth, or staying wide after contact and giving away the open court." }
+      ]
+    },
+    {
+      "slug": "swing-volley",
+      "level": 3,
+      "title": "Swing volley",
+      "category": "technique",
+      "technique": "swing-volley",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Take a short ball early with a compact forehand swing on the way to the net.",
+      "blocks": [
+        { "kind": "overview", "body": "A swing volley is an attacking groundstroke taken before the ball drops to a comfortable baseline height. It lets you keep moving forward while using a controlled swing to handle a short ball." },
+        { "kind": "steps", "body": "1. Recognize the short ball and move forward behind it. 2. Prepare early with the racket up. 3. Contact in front using a compact low-to-high swing. 4. Continue toward the net and split step before the reply." },
+        { "kind": "tips", "body": "Choose a target with margin and let your forward movement add pressure. Keep the swing shorter than a baseline forehand so you arrive ready for the next ball." },
+        { "kind": "mistakes", "body": "Waiting for the ball to drop, taking a full backswing while moving, or stopping after contact instead of closing the net." }
+      ]
+    },
+    {
+      "slug": "drop-volley",
+      "level": 3,
+      "title": "Drop volley",
+      "category": "technique",
+      "technique": "drop-volley",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Absorb the incoming pace and leave a soft volley just over the net.",
+      "blocks": [
+        { "kind": "overview", "body": "A drop volley uses touch rather than a long swing. The racket face cushions the incoming ball so it lands short and forces the opponent to cover forward quickly." },
+        { "kind": "steps", "body": "1. Move your racket behind the ball early. 2. Keep a continental grip and a slightly open face. 3. Soften the hands to absorb pace on contact. 4. Angle the ball just over the net and recover for the next shot." },
+        { "kind": "tips", "body": "Use the drop volley when the opponent is deep and the incoming ball has manageable pace. Keep the racket head stable while the body moves through the volley." },
+        { "kind": "mistakes", "body": "Swinging at the ball, trying the shot from too far behind the net, or leaving the face so open that the ball sits up." }
+      ]
+    },
+    {
+      "slug": "serve-and-volley",
+      "level": 4,
+      "title": "Serve and volley",
+      "category": "strategy",
+      "technique": "serve-and-volley",
+      "freeTier": false,
+      "estimatedMinutes": 14,
+      "summary": "Turn a purposeful serve into forward pressure and a first volley.",
+      "blocks": [
+        { "kind": "overview", "body": "Serve and volley connects the serve, the approach, and the first volley into one plan. The serve should make the return predictable enough for you to move forward with balance and time." },
+        { "kind": "steps", "body": "1. Choose a serve target that limits the return angles. 2. Move forward behind the serve with the racket up. 3. Split step as the returner contacts the ball. 4. Volley into space, then recover for the next shot." },
+        { "kind": "tips", "body": "Practice the first volley as a deep, simple ball before trying sharp angles. Keep your steps active so the return does not catch you flat-footed." },
+        { "kind": "mistakes", "body": "Rushing forward without reading the return, dropping the racket below the hands, or trying to finish the first volley from a poor position." }
+      ]
+    },
+    {
+      "slug": "doubles-formation",
+      "level": 3,
+      "title": "Doubles formation",
+      "category": "strategy",
+      "technique": "doubles-formation",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "Use spacing and shared court coverage to make a doubles team harder to pass.",
+      "blocks": [
+        { "kind": "overview", "body": "A doubles formation gives each partner a starting responsibility and keeps the middle protected. Good teams move as a pair, close gaps, and adjust when the ball changes direction." },
+        { "kind": "steps", "body": "1. Set the server behind the baseline and the partner in a ready net position. 2. Cover the middle before chasing the sideline. 3. Shift together as the ball travels. 4. Reset your spacing after every point." },
+        { "kind": "tips", "body": "Agree on who owns the middle and the first lob before serving. Keep the racket up and communicate after the point, not during a rushed swing." },
+        { "kind": "mistakes", "body": "Standing in parallel without a plan, leaving a lane between partners, or one player moving while the other stays fixed." }
+      ]
+    },
+    {
+      "slug": "poaching",
+      "level": 3,
+      "title": "Poaching",
+      "category": "strategy",
+      "technique": "poaching",
+      "freeTier": true,
+      "estimatedMinutes": 10,
+      "summary": "Cross in front of your partner to intercept a predictable doubles return.",
+      "blocks": [
+        { "kind": "overview", "body": "Poaching is a planned net-player move across the middle to take the ball before it reaches your partner. It works best when the serve or partner’s shot makes the reply predictable." },
+        { "kind": "steps", "body": "1. Start in a ready net position with a clear signal. 2. Watch the opponent’s racket and read the likely return. 3. Close across the middle when the ball is committed. 4. Volley simply and recover with your partner." },
+        { "kind": "tips", "body": "Leave only when your partner knows the plan. A small first step is enough to test the return; commit when you can reach the ball in front." },
+        { "kind": "mistakes", "body": "Crossing too early, watching only the ball, or moving so far that the down-the-line lane becomes an easy target." }
+      ]
+    },
+    {
+      "slug": "tiebreak-strategy",
+      "level": 3,
+      "title": "Tiebreak strategy",
+      "category": "strategy",
+      "technique": "tiebreak-strategy",
+      "freeTier": true,
+      "estimatedMinutes": 12,
+      "summary": "Play a tiebreak one clear point at a time with targets and margin.",
+      "blocks": [
+        { "kind": "overview", "body": "A tiebreak rewards a steady routine because every point has extra weight. Choose a dependable target, protect the middle, and make the opponent earn the next opening instead of forcing a low-percentage winner." },
+        { "kind": "steps", "body": "1. Call the score and settle into the same routine before each point. 2. Start serves and returns with clear targets. 3. Play the safe cross-court ball when the position is neutral. 4. Change direction only when you have time and space, then reset for the next point." },
+        { "kind": "tips", "body": "Treat the tiebreak as a sequence of small decisions, not one long test. Breathe after each point and keep the two-point winning margin in mind without rushing." },
+        { "kind": "mistakes", "body": "Chasing a quick winner, abandoning a reliable serve pattern after one miss, or letting the previous point change the next-point routine." }
+      ]
     }
   ],
   "drills": [
@@ -481,7 +763,19 @@
     { "term": "Topspin", "definition": "Forward spin that helps the ball dip into the court." },
     { "term": "Slice", "definition": "Backspin that keeps the ball low." },
     { "term": "Baseline", "definition": "The line at the back of each end of the court." },
-    { "term": "Tiebreak", "definition": "A special game used when a set reaches 6–6." }
+    { "term": "Tiebreak", "definition": "A special game used when a set reaches 6–6." },
+    { "term": "Break point", "definition": "A point the receiver can win to take the server's game." },
+    { "term": "Deuce court", "definition": "The server's right-hand side of the court, where the first point of a game is served." },
+    { "term": "Ad court", "definition": "The server's left-hand side of the court, used for the point after deuce." },
+    { "term": "Continental grip", "definition": "A hammer-like grip commonly used for serves, volleys, slices, and overheads." },
+    { "term": "Eastern grip", "definition": "A forehand grip that puts the palm more behind the handle for comfortable flatter contact." },
+    { "term": "Sweet spot", "definition": "The racket face area where contact feels solid and sends the ball with little vibration." },
+    { "term": "Split step", "definition": "A small hop that lands as the opponent hits, leaving you balanced to move either way." },
+    { "term": "Recovery position", "definition": "A balanced spot near the middle of your court where you can cover the next shot." },
+    { "term": "Approach shot", "definition": "A shot hit while moving forward to take a better position near the net." },
+    { "term": "Passing shot", "definition": "A shot aimed beyond an opponent who is positioned near the net." },
+    { "term": "Kick serve", "definition": "A spin serve that clears the net safely and jumps up after it bounces." },
+    { "term": "Serve plus one", "definition": "A plan to use the serve to set up the first shot after the return." }
   ],
   "coachRules": [
     {

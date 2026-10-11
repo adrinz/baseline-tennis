@@ -1,5 +1,6 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
+import { verifyAppleIdentityToken, verifyGoogleIdToken } from '../identity-token.ts';
 import { ApiError } from '../errors.ts';
 import { headerValue, optionalBoolean, optionalText, parseBody, parseNear, queryRecord, routeParam } from '../http.ts';
 import { toPlaybackDescriptor } from '../media/publish.ts';
@@ -30,6 +31,7 @@ const profileShape = {
   showAgeBand: z.boolean().optional(),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
+  ntrpCode: z.string().trim().max(40).nullable().optional(),
 };
 
 export type RouteDeps = {
@@ -69,11 +71,39 @@ function limit(limiter: SlidingWindowLimiter, key: string): void {
 }
 
 function registerAuth(app: FastifyInstance, deps: RouteDeps): void {
-  app.post('/auth/apple', async () => {
-    throw new ApiError(501, 'not_configured', 'Sign in with Apple is unavailable until Apple credentials are configured.');
+  app.post('/auth/apple', async (request) => {
+    const raw = request.body as { identityToken?: unknown } | null;
+    const identityToken = typeof raw?.identityToken === 'string' ? raw.identityToken : '';
+    if (identityToken.length < 20) {
+      throw new ApiError(401, 'unauthorized', 'Sign in with Apple did not include an identity token.');
+    }
+    const claims = await verifyAppleIdentityToken(identityToken);
+    if (!claims) throw new ApiError(401, 'unauthorized', 'That Apple sign-in could not be checked.');
+    const givenName = typeof (raw as { givenName?: unknown }).givenName === 'string'
+      ? (raw as { givenName: string }).givenName.trim()
+      : undefined;
+    return deps.repo.signInWithIdentity({
+      provider: 'apple',
+      subject: claims.sub,
+      email: claims.email ?? '',
+      givenName,
+    });
   });
-  app.post('/auth/google', async () => {
-    throw new ApiError(501, 'not_configured', 'Sign in with Google is unavailable until Google credentials are configured.');
+  app.post('/auth/google', async (request) => {
+    const raw = request.body as { idToken?: unknown; givenName?: unknown } | null;
+    const idToken = typeof raw?.idToken === 'string' ? raw.idToken : '';
+    if (idToken.length < 20) {
+      throw new ApiError(401, 'unauthorized', 'Google sign-in did not include an ID token.');
+    }
+    const claims = await verifyGoogleIdToken(idToken);
+    if (!claims) throw new ApiError(401, 'unauthorized', 'That Google sign-in could not be checked.');
+    const givenName = typeof raw?.givenName === 'string' ? raw.givenName.trim() : undefined;
+    return deps.repo.signInWithIdentity({
+      provider: 'google',
+      subject: claims.sub,
+      email: claims.email ?? '',
+      givenName,
+    });
   });
 
   app.post('/auth/email/start', async (request) => {
@@ -94,6 +124,19 @@ function registerAuth(app: FastifyInstance, deps: RouteDeps): void {
       request.body,
     );
     return deps.repo.finishEmail(body);
+  });
+
+  app.post('/auth/complete', async (request) => {
+    limit(deps.authLimiter, request.ip);
+    const body = parseBody(
+      z.object({
+        signupToken: z.string().min(20),
+        birthYear: z.number().int().min(1900).max(new Date().getFullYear()),
+        displayName: z.string().trim().min(1).max(40).optional(),
+      }),
+      request.body,
+    );
+    return deps.repo.completeSignup(body);
   });
 
   app.post('/auth/refresh', async (request) => {

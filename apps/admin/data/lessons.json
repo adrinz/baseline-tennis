@@ -54,5 +54,149 @@
     "levelName": "Advanced Beginner",
     "category": "strategy",
     "status": "draft"
+  },
+  {
+    "slug": "serve-plus-one",
+    "title": "Serve plus one",
+    "level": 4,
+    "levelName": "Intermediate",
+    "category": "strategy",
+    "status": "published"
+  },
+  {
+    "slug": "inside-out-forehand",
+    "title": "Inside-out forehand",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "crossover-step",
+    "title": "Crossover step",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "kick-serve",
+    "title": "Kick serve",
+    "level": 4,
+    "levelName": "Intermediate",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "angle-shot",
+    "title": "Angle shot",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "strategy",
+    "status": "published"
+  },
+  {
+    "slug": "neutral-ball",
+    "title": "Neutral ball",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "strategy",
+    "status": "published"
+  },
+  {
+    "slug": "flat-serve",
+    "title": "Flat serve",
+    "level": 2,
+    "levelName": "Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "slice-serve",
+    "title": "Slice serve",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "return-positioning",
+    "title": "Return positioning",
+    "level": 2,
+    "levelName": "Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "backhand-slice",
+    "title": "Backhand slice",
+    "level": 2,
+    "levelName": "Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "forehand-down-the-line",
+    "title": "Forehand down the line",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "cross-court-forehand",
+    "title": "Cross-court forehand",
+    "level": 2,
+    "levelName": "Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "swing-volley",
+    "title": "Swing volley",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "drop-volley",
+    "title": "Drop volley",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "serve-and-volley",
+    "title": "Serve and volley",
+    "level": 4,
+    "levelName": "Intermediate",
+    "category": "strategy",
+    "status": "published"
+  },
+  {
+    "slug": "doubles-formation",
+    "title": "Doubles formation",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "strategy",
+    "status": "published"
+  },
+  {
+    "slug": "poaching",
+    "title": "Poaching",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "strategy",
+    "status": "published"
+  },
+  {
+    "slug": "tiebreak-strategy",
+    "title": "Tiebreak strategy",
+    "level": 3,
+    "levelName": "Advanced Beginner",
+    "category": "strategy",
+    "status": "published"
   }
 ]

@@ -87,7 +87,7 @@ const constraints = [
 ];
 
 test('E2E-DB migrations declare 45 tables and the privacy constraints', () => {
-  assert.deepEqual(readdirSync(migrationsDir).sort(), ['001_init.sql', '002_seed_reference.sql']);
+  assert.deepEqual(readdirSync(migrationsDir).sort(), ['001_init.sql', '002_seed_reference.sql', '003_account_runtime.sql']);
   const declared = [...init.matchAll(/^CREATE TABLE (\w+)/gm)].map((match) => match[1]);
   assert.deepEqual(declared, tables);
   assert.match(init, /CREATE EXTENSION IF NOT EXISTS postgis/);

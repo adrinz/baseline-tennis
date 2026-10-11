@@ -13,5 +13,8 @@ import UIKit
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     PlacesChannel.register(with: engineBridge.pluginRegistry)
+    AppleSignInChannel.register(with: engineBridge.pluginRegistry)
+    GoogleSignInChannel.register(with: engineBridge.pluginRegistry)
+    EmailCodeChannel.register(with: engineBridge.pluginRegistry)
   }
 }

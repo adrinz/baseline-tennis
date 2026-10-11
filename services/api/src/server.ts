@@ -6,7 +6,12 @@ const port = Number(process.env.PORT ?? 8787);
 const host = process.env.HOST ?? '0.0.0.0';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const storePath = process.env.BASELINE_STORE_PATH ?? path.join(here, '..', 'data', 'store.json');
-const app = await buildApp({ logger: true, storePath });
+const databaseUrl = process.env.DATABASE_URL;
+const app = await buildApp({
+  logger: true,
+  storePath: databaseUrl ? undefined : storePath,
+  databaseUrl,
+});
 
 try {
   await app.listen({ port, host });

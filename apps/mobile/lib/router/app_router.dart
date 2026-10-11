@@ -12,6 +12,7 @@ import 'package:baseline/screens/paywall_screen.dart';
 import 'package:baseline/screens/plan_preview_screen.dart';
 import 'package:baseline/screens/profile_screen.dart';
 import 'package:baseline/screens/search_screen.dart';
+import 'package:baseline/screens/skill_rating_screen.dart';
 import 'package:baseline/screens/shell_screen.dart';
 import 'package:baseline/screens/sign_in_screen.dart';
 import 'package:baseline/screens/train_screen.dart';
@@ -137,6 +138,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: '/profile',
                 builder: (context, state) => const ProfileScreen(),
                 routes: [
+                  GoRoute(
+                    path: 'rating',
+                    builder: (context, state) => const SkillRatingScreen(),
+                  ),
                   GoRoute(
                     path: 'privacy',
                     builder: (context, state) => const PrivacyScreen(),

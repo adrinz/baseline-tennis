@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { randomInt, randomUUID } from 'node:crypto';
 import { canCreateAccount, canUsePartnerFeatures } from './age.ts';
 import { glossarySlug, type Catalog, type CatalogDrill, type CatalogLesson } from './catalog.ts';
 import { answerCoachQuestion, type UnfinishedLesson } from './coach/engine.ts';
@@ -66,6 +66,7 @@ type Profile = {
   locationCell: { lat: number; lng: number } | null;
   searchRadiusKm: number;
   showAgeBand: boolean;
+  ntrpCode?: string | null;
 };
 
 type Notifications = {
@@ -226,6 +227,15 @@ export type ProfilePatch = {
   showAgeBand?: boolean;
   latitude?: number;
   longitude?: number;
+  ntrpCode?: string | null;
+};
+
+type SignupDraft = {
+  provider: 'apple' | 'google' | 'email';
+  subject: string;
+  email: string;
+  givenName: string | null;
+  expiresAt: number;
 };
 
 type TechniqueRecord = {
@@ -316,6 +326,8 @@ export class MemoryRepository {
   private readonly accessTokens = new Map<string, TokenSession>();
   private readonly refreshTokens = new Map<string, TokenSession>();
   private readonly pendingCodes = new Map<string, { codeHash: string; expiresAt: number }>();
+  private readonly identities = new Map<string, string>();
+  private readonly signups = new Map<string, SignupDraft>();
   private readonly lessonProgress = new Map<string, LessonProgress>();
   private readonly plans = new Map<string, Plan>();
   private readonly practiceSessions: PracticeSession[] = [];
@@ -346,9 +358,13 @@ export class MemoryRepository {
     for (const seed of SEED_PLAYERS) this.insertSeedPlayer(seed);
   }
 
-  startEmail(email: string): { ok: true; delivery: 'dev'; expiresIn: number } {
-    this.pendingCodes.set(email, { codeHash: DEV_CODE_HASH, expiresAt: Date.now() + CODE_TTL_MS });
-    return { ok: true, delivery: 'dev', expiresIn: CODE_TTL_MS / 1000 };
+  startEmail(email: string): { ok: true; delivery: 'dev' | 'local'; expiresIn: number; previewCode?: string } {
+    const preview = process.env.BASELINE_EMAIL_PREVIEW === '1';
+    const code = preview ? String(randomInt(0, 1_000_000)).padStart(6, '0') : DEV_EMAIL_CODE;
+    this.pendingCodes.set(email, { codeHash: hashToken(code), expiresAt: Date.now() + CODE_TTL_MS });
+    return preview
+      ? { ok: true, delivery: 'local', expiresIn: CODE_TTL_MS / 1000, previewCode: code }
+      : { ok: true, delivery: 'dev', expiresIn: CODE_TTL_MS / 1000 };
   }
 
   finishEmail(input: {
@@ -361,7 +377,7 @@ export class MemoryRepository {
     refreshToken: string;
     expiresIn: number;
     user: { id: string; email: string; birthYear: number; status: User['status']; entitlement: Entitlement };
-  } {
+  } | { status: 'needs_birth_year'; signupToken: string; email: string } {
     const pending = this.pendingCodes.get(input.email);
     if (!pending || pending.expiresAt <= Date.now()) {
       throw new ApiError(401, 'unauthorized', 'Request a code first.');
@@ -384,7 +400,13 @@ export class MemoryRepository {
     }
 
     if (input.birthYear == null) {
-      throw new ApiError(400, 'validation', 'Birth year is required to create an account.');
+      this.pendingCodes.delete(input.email);
+      return this.startSignup({
+        provider: 'email',
+        subject: input.email,
+        email: input.email,
+        givenName: input.displayName ?? null,
+      });
     }
     if (!canCreateAccount(input.birthYear)) {
       throw new ApiError(403, 'forbidden', 'Baseline is for players 16 and older.');
@@ -467,6 +489,7 @@ export class MemoryRepository {
     if (patch.countryCode != null) profile.countryCode = patch.countryCode.toUpperCase();
     if (patch.searchRadiusKm != null) profile.searchRadiusKm = patch.searchRadiusKm;
     if (patch.showAgeBand != null) profile.showAgeBand = patch.showAgeBand;
+    if (patch.ntrpCode !== undefined) profile.ntrpCode = patch.ntrpCode;
     if (patch.latitude != null && patch.longitude != null) profile.locationCell = nextCell;
     return this.mePayload(user);
   }
@@ -1305,6 +1328,86 @@ export class MemoryRepository {
     this.streaks.set(user.id, { currentCount: 0, longestCount: 0, lastActiveOn: null });
   }
 
+  signInWithIdentity(input: {
+    provider: 'apple' | 'google' | 'email';
+    subject: string;
+    email: string;
+    givenName?: string | null;
+  }): ReturnType<MemoryRepository['issueSession']> | ReturnType<MemoryRepository['startSignup']> {
+    const existingId = this.identities.get(identityKey(input.provider, input.subject));
+    const existing = existingId ? this.users.get(existingId) : undefined;
+    if (existing) return this.sessionForActive(existing);
+    const email = input.email.trim().toLowerCase();
+    const byEmail = email ? this.usersByEmail.get(email) : undefined;
+    const emailUser = byEmail ? this.users.get(byEmail) : undefined;
+    if (emailUser) {
+      this.bindIdentity(input.provider, input.subject, emailUser.id);
+      return this.sessionForActive(emailUser);
+    }
+    return this.startSignup(input);
+  }
+
+  completeSignup(input: {
+    signupToken: string;
+    birthYear: number;
+    displayName?: string;
+  }): ReturnType<MemoryRepository['issueSession']> {
+    const key = hashToken(input.signupToken);
+    const pending = this.signups.get(key);
+    if (!pending || pending.expiresAt <= Date.now()) {
+      throw new ApiError(401, 'unauthorized', 'That sign-in expired. Start again.');
+    }
+    if (!canCreateAccount(input.birthYear)) {
+      throw new ApiError(403, 'forbidden', 'Baseline is for players 16 and older.');
+    }
+    const linked = this.identities.get(identityKey(pending.provider, pending.subject));
+    const already = linked ? this.users.get(linked) : undefined;
+    if (already) {
+      this.signups.delete(key);
+      return this.sessionForActive(already);
+    }
+    const email = pending.email.trim().toLowerCase();
+    const user = this.createUser({
+      email,
+      birthYear: input.birthYear,
+      displayName: input.displayName?.trim() || pending.givenName || nameFromEmail(email || 'player'),
+    });
+    this.bindIdentity(pending.provider, pending.subject, user.id);
+    this.signups.delete(key);
+    return this.issueSession(user);
+  }
+
+  private startSignup(input: {
+    provider: 'apple' | 'google' | 'email';
+    subject: string;
+    email: string;
+    givenName?: string | null;
+  }): { status: 'needs_birth_year'; signupToken: string; email: string } {
+    const signupToken = newToken();
+    this.signups.set(hashToken(signupToken), {
+      provider: input.provider,
+      subject: input.subject,
+      email: input.email.trim().toLowerCase(),
+      givenName: input.givenName?.trim() || null,
+      expiresAt: Date.now() + CODE_TTL_MS,
+    });
+    return { status: 'needs_birth_year', signupToken, email: input.email.trim().toLowerCase() };
+  }
+
+  private sessionForActive(user: User): ReturnType<MemoryRepository['issueSession']> {
+    if (user.status === 'deleted') {
+      throw new ApiError(403, 'forbidden', 'This account was deleted and cannot be reactivated.');
+    }
+    if (user.status === 'suspended') {
+      throw new ApiError(403, 'forbidden', 'This account is suspended.');
+    }
+    return this.issueSession(user);
+  }
+
+  private bindIdentity(provider: string, subject: string, userId: string): void {
+    this.identities.set(identityKey(provider, subject), userId);
+  }
+
   private createUser(input: { email: string; birthYear: number; displayName: string }): User {
     const user: User = {
       id: randomUUID(),
@@ -1316,7 +1419,7 @@ export class MemoryRepository {
       deletedAt: null,
     };
     this.users.set(user.id, user);
-    this.usersByEmail.set(user.email, user.id);
+    if (user.email) this.usersByEmail.set(user.email.toLowerCase(), user.id);
     this.profiles.set(user.id, {
       userId: user.id,
       displayName: input.displayName,
@@ -1418,6 +1521,7 @@ export class MemoryRepository {
       searchRadiusKm: profile.searchRadiusKm,
       showAgeBand: profile.showAgeBand,
       hasLocationCell: profile.locationCell != null,
+      ntrpCode: profile.ntrpCode ?? null,
     };
   }
 
@@ -1687,6 +1791,11 @@ export class MemoryRepository {
       blocks: this.blocks,
       reports: this.reports,
       favorites: this.favorites,
+      identities: [...this.identities.entries()].map(([key, userId]) => {
+        const split = key.indexOf(':');
+        return { provider: key.slice(0, split), subject: key.slice(split + 1), userId };
+      }),
+      signups: [...this.signups.entries()],
     };
   }
 
@@ -1719,7 +1828,18 @@ export class MemoryRepository {
     replaceArray(this.blocks, raw.blocks);
     replaceArray(this.reports, raw.reports);
     replaceArray(this.favorites, raw.favorites);
+    this.identities.clear();
+    for (const row of arrayOf<{ provider: string; subject: string; userId: string }>(raw.identities)) {
+      if (row.provider && row.subject && row.userId) {
+        this.identities.set(identityKey(row.provider, row.subject), row.userId);
+      }
+    }
+    replaceEntries(this.signups, raw.signups);
   }
+}
+
+function identityKey(provider: string, subject: string): string {
+  return `${provider}:${subject}`;
 }
 
 function arrayOf<T>(value: unknown): T[] {

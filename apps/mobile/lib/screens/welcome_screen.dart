@@ -1,3 +1,4 @@
+import 'package:baseline/data/auth_gateway.dart';
 import 'package:baseline/state/player_session.dart';
 import 'package:baseline/state/session_controller.dart';
 import 'package:baseline/theme/baseline_colors.dart';
@@ -10,11 +11,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class WelcomeScreen extends ConsumerWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
+  bool _busy = false;
+  String? _error;
+
+  Future<void> _apple() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    final attempt = await ref
+        .read(sessionProvider.notifier)
+        .signInWithProvider(AuthProvider.apple);
+    if (!mounted) return;
+    setState(() => _busy = false);
+    switch (attempt) {
+      case AuthSucceeded():
+        context.go('/age');
+      case AuthCancelled():
+        break;
+      case AuthRejected(:final message):
+        setState(() => _error = message);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: BaselineColors.nightCourt,
       body: Stack(
@@ -53,21 +82,27 @@ class WelcomeScreen extends ConsumerWidget {
                           label: 'Get started',
                           semanticsLabel: 'Get started',
                           tone: BaselineButtonTone.ball,
-                          onPressed: () => context.push('/sign-in'),
+                          onPressed: _busy ? null : () => context.push('/sign-in'),
                         ),
                         const SizedBox(height: 12),
                         BaselineButton(
-                          label: 'Sign in with Apple',
+                          label: _busy ? 'Signing in…' : 'Sign in with Apple',
                           semanticsLabel: 'Sign in with Apple',
                           tone: BaselineButtonTone.line,
                           icon: Icons.apple,
-                          onPressed: () {
-                            ref
-                                .read(sessionProvider.notifier)
-                                .signIn(AuthProvider.apple);
-                            context.go('/age');
-                          },
+                          onPressed: _busy ? null : _apple,
                         ),
+                        if (_error != null) ...[
+                          const SizedBox(height: 12),
+                          ScaledText(
+                            _error!,
+                            style: const TextStyle(
+                              color: BaselineColors.ball,
+                              fontSize: 14,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),

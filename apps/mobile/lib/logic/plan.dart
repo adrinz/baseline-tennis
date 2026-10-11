@@ -108,3 +108,11 @@ String timeGreeting(DateTime now) {
   if (now.hour < 17) return 'Good afternoon';
   return 'Good evening';
 }
+
+/// "Good morning", or "Good morning John" when sign-in included a first name.
+String greetingLine(DateTime now, String? name) {
+  final hello = timeGreeting(now);
+  final trimmed = name?.trim() ?? '';
+  if (trimmed.isEmpty) return hello;
+  return '$hello $trimmed';
+}

@@ -1,4 +1,5 @@
 import 'package:baseline/app.dart';
+import 'package:baseline/data/baseline_api.dart';
 import 'package:baseline/state/session_controller.dart';
 import 'package:baseline/state/session_store.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       overrides: [
+        baselineApiProvider.overrideWithValue(BaselineApi()),
         sessionProvider.overrideWith(() => SessionController(initial: saved)),
       ],
       child: const BaselineApp(),
