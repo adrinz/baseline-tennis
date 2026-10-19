@@ -2,23 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BaselineGoogleClientID</key>
+	<string>283168836629-gicgf5vp90r2q7d8oimf0dejj53um4h9.apps.googleusercontent.com</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>BaselineGoogleClientID</key>
-	<string>283168836629-gicgf5vp90r2q7d8oimf0dejj53um4h9.apps.googleusercontent.com</string>
 	<key>CFBundleDisplayName</key>
 	<string>Baseline</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.283168836629-gicgf5vp90r2q7d8oimf0dejj53um4h9</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -33,21 +24,30 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.283168836629-gicgf5vp90r2q7d8oimf0dejj53um4h9</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Baseline uses your location to show nearby courts, coaches, and stores. You can type a city instead.</string>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Baseline uses the practice server on this Wi-Fi while the app is hosted on your Mac.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Baseline uses the practice server on this Wi-Fi while the app is hosted on your Mac.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Baseline uses your location to show nearby courts, coaches, and stores. You can type a city instead.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

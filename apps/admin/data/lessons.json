@@ -198,5 +198,29 @@
     "levelName": "Advanced Beginner",
     "category": "strategy",
     "status": "published"
+  },
+  {
+    "slug": "advanced-biomechanics",
+    "title": "Advanced biomechanics for efficient strokes",
+    "level": 5,
+    "levelName": "Advanced",
+    "category": "technique",
+    "status": "published"
+  },
+  {
+    "slug": "opponent-scouting",
+    "title": "Opponent scouting and match patterns",
+    "level": 5,
+    "levelName": "Advanced",
+    "category": "strategy",
+    "status": "published"
+  },
+  {
+    "slug": "tournament-preparation",
+    "title": "Tournament preparation and match routine",
+    "level": 5,
+    "levelName": "Advanced",
+    "category": "strategy",
+    "status": "published"
   }
 ]

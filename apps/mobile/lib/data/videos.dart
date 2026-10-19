@@ -1028,11 +1028,7 @@ const lessonVideoIds = <String, List<String>>{
   'welcome-to-tennis': ['intro-group-lesson', 'rally-friends'],
   'the-court': ['court-diagram', 'courts-overhead'],
   'scoring': ['scoring-diagram', 'match-rally'],
-  'ready-position': [
-    'ready-live',
-    'return-stance',
-    'split-step-feet',
-  ],
+  'ready-position': ['ready-live', 'return-stance', 'split-step-feet'],
   'basic-forehand': ['forehand-shadow', 'forehand-live', 'rally-practice'],
   'basic-rally': [
     'ball-over-net',
@@ -1087,7 +1083,12 @@ const lessonVideoIds = <String, List<String>>{
     'court-practice',
     'serve-basket',
   ],
-  'contact-point': ['rally-contact', 'forehand-shadow', 'forehand-live', 'groundstrokes-close'],
+  'contact-point': [
+    'rally-contact',
+    'forehand-shadow',
+    'forehand-live',
+    'groundstrokes-close',
+  ],
   'slice': ['slice-shadow'],
   'topspin': ['forehand-shadow', 'forehand-live'],
   'one-handed-backhand': ['backhand-one-shadow'],
@@ -1103,7 +1104,12 @@ const lessonVideoIds = <String, List<String>>{
   'drop-shot': ['drop-shadow'],
   'approach-shot': ['approach-diagram'],
   'passing-shot': ['passing-diagram'],
-  'second-serve': ['serve-bounce', 'serve-shadow', 'serve-trophy', 'serve-routine'],
+  'second-serve': [
+    'serve-bounce',
+    'serve-shadow',
+    'serve-trophy',
+    'serve-routine',
+  ],
   'serve-plus-one': ['serve-plus-one-diagram', 'serve-wide', 'forehand-live'],
   'inside-out-forehand': [
     'inside-out-forehand-diagram',
@@ -1159,11 +1165,19 @@ const lessonVideoIds = <String, List<String>>{
     'tiebreak-scoreboard-diagram',
     'scoring-diagram',
   ],
+  'advanced-biomechanics': ['groundstrokes-close', 'forehand-shadow'],
+  'opponent-scouting': ['match-rally', 'rally-baseline'],
+  'tournament-preparation': ['match-rally', 'serve-routine'],
 };
 
 const drillVideoIds = <String, List<String>>{
   'wall-rally': ['wall-rally-live'],
-  'warmup': ['warmup-shoulder', 'warmup-arms', 'split-step-feet', 'footwork-baseline'],
+  'warmup': [
+    'warmup-shoulder',
+    'warmup-arms',
+    'split-step-feet',
+    'footwork-baseline',
+  ],
   'forehand-consistency': [
     'rally-contact',
     'forehand-live',
@@ -1171,7 +1185,14 @@ const drillVideoIds = <String, List<String>>{
     'rally-practice',
   ],
   'split-step': ['ready-live', 'split-step-feet', 'footwork-baseline'],
-  'serve-target': ['basket-balls', 'serve-bounce', 'serve-basket', 'serve-wide', 'serve-shadow', 'serve-toss'],
+  'serve-target': [
+    'basket-balls',
+    'serve-bounce',
+    'serve-basket',
+    'serve-wide',
+    'serve-shadow',
+    'serve-toss',
+  ],
   'backhand-consistency': [
     'backhand-two-shadow',
     'backhand-one-shadow',

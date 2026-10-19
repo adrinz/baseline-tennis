@@ -896,6 +896,87 @@ const moreLessons = <Lesson>[
       ),
     ],
   ),
+  Lesson(
+    slug: 'advanced-biomechanics',
+    level: 5,
+    title: 'Advanced biomechanics for efficient strokes',
+    category: 'technique',
+    freeTier: false,
+    estimatedMinutes: 18,
+    summary: 'Use sequencing, balance, and ground force to create racket speed without muscling the ball.',
+    blocks: [
+      LessonBlock(
+        kind: 'overview',
+        body: 'Powerful tennis strokes are a sequence: the legs push into the court, the hips and trunk rotate, the shoulder and arm follow, and the racket releases last. Good biomechanics improve timing and repeatability while keeping effort available for the next ball.',
+      ),
+      LessonBlock(
+        kind: 'steps',
+        body: '1. Start from a balanced split step and load the outside leg as you move. 2. Plant with enough space from the ball to keep the hitting arm relaxed. 3. Let the hips begin the rotation, then allow the trunk, shoulder, and racket to follow. 4. Contact in front with a stable head and finish in a position that lets you recover. 5. Record a few swings from the side and compare balance, spacing, and recovery rather than only racket speed.',
+      ),
+      LessonBlock(
+        kind: 'tips',
+        body: 'Think “push, rotate, release” instead of “hit harder.” Keep the non-hitting arm involved in the turn and use shadow swings at half speed before adding pace. Safety note: warm up progressively, keep the motion pain-free, and stop or seek qualified coaching for sharp or persistent pain rather than forcing a technical change.',
+      ),
+      LessonBlock(
+        kind: 'mistakes',
+        body: 'Trying to generate pace with the arm alone, opening the shoulders before the feet are set, contacting too close to the body, locking the legs, or copying a pro’s finish without matching your own spacing and mobility.',
+      ),
+    ],
+  ),
+  Lesson(
+    slug: 'opponent-scouting',
+    level: 5,
+    title: 'Opponent scouting and match patterns',
+    category: 'strategy',
+    freeTier: false,
+    estimatedMinutes: 20,
+    summary: 'Turn early-match observations into simple patterns that target your opponent\'s preferences and pressure points.',
+    blocks: [
+      LessonBlock(
+        kind: 'overview',
+        body: 'Scouting is useful when it leads to a decision you can repeat under pressure. Watch how the opponent serves, returns, moves, and responds to height, pace, and direction; then choose one or two patterns that fit your own strengths.',
+      ),
+      LessonBlock(
+        kind: 'steps',
+        body: '1. In the first games, note serve direction, return position, preferred rally side, and movement under pressure. 2. Test observations with safe questions such as a high cross-court ball or a serve to the body. 3. Identify one reliable pattern to start points and one change-up for important points. 4. Between games, write a short cue: target, expected reply, and next shot. 5. Recheck the plan after the opponent adapts instead of repeating a pattern that has stopped working.',
+      ),
+      LessonBlock(
+        kind: 'tips',
+        body: 'Use observable facts—“late on high backhands,” not “looks nervous.” Track tendencies across several points and prioritize what you can execute: a deep cross-court ball, a body serve, or making the opponent hit one extra shot.',
+      ),
+      LessonBlock(
+        kind: 'mistakes',
+        body: 'Making a complete judgment from one error, changing tactics after every point, targeting a weakness you cannot reach consistently, or scouting so intensely that you lose awareness of score, position, and ball quality.',
+      ),
+    ],
+  ),
+  Lesson(
+    slug: 'tournament-preparation',
+    level: 5,
+    title: 'Tournament preparation and match routine',
+    category: 'strategy',
+    freeTier: false,
+    estimatedMinutes: 22,
+    summary: 'Prepare your body, equipment, schedule, and between-point routine so competition decisions stay clear under pressure.',
+    blocks: [
+      LessonBlock(
+        kind: 'overview',
+        body: 'Tournament performance starts before the first ball. A repeatable plan for sleep, food, hydration, warm-up, equipment, and match routines reduces avoidable decisions and leaves attention for tactics. The goal is readiness, not exhausting yourself in preparation.',
+      ),
+      LessonBlock(
+        kind: 'steps',
+        body: '1. Two or three days ahead, check the draw or schedule, court surface, travel time, weather, balls, strings, grips, shoes, and a backup outfit. 2. The day before, rehearse a short tactical plan and finish practice feeling fresh. 3. Arrive early enough to hydrate, use the restroom, and complete a progressive warm-up: easy movement, dynamic mobility, shadow swings, then controlled hitting. 4. Between points, use the same sequence—turn away, breathe, choose a target, and commit to the next ball. 5. After the match, cool down, replace fluids and food, and record one useful lesson before planning the next session.',
+      ),
+      LessonBlock(
+        kind: 'tips',
+        body: 'Pack familiar snacks and fluids rather than experimenting on match day. Keep tactics to two or three cues, use shade and rest periods deliberately, and adjust warm-up intensity to heat, cold, and how your body feels.',
+      ),
+      LessonBlock(
+        kind: 'mistakes',
+        body: 'Arriving rushed, skipping a progressive warm-up, eating or drinking something unfamiliar, practicing until tired on tournament morning, carrying too many tactical thoughts, or judging the whole event by one match.',
+      ),
+    ],
+  ),
 ];
 
 const moreGlossary = <GlossaryTerm>[
