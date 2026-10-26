@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "node --watch src/server.ts",
     "start": "node src/server.ts",
-    "test": "node --test test/api.test.ts test/e2e-journey.test.ts test/schema-e2e.test.ts",
+    "test": "node --test test/api.test.ts test/e2e-journey.test.ts test/schema-e2e.test.ts test/client-surface.test.ts",
     "typecheck": "tsc --noEmit",
     "db:migrate": "node scripts/migrate.ts",
     "db:seed": "node scripts/seed-content.ts"

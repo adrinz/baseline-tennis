@@ -1,5 +1,6 @@
 import 'package:baseline/data/catalog.dart';
 import 'package:baseline/data/ntrp.dart';
+import 'package:baseline/data/videos.dart';
 import 'package:baseline/logic/age.dart';
 import 'package:baseline/logic/progress.dart';
 import 'package:baseline/state/player_session.dart';
@@ -74,8 +75,12 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 2),
                             ScaledText(
-                              level == null ? 'Level ${session.level}' : level.name,
-                              style: BaselineType.heroTitle.copyWith(fontSize: 28),
+                              level == null
+                                  ? 'Level ${session.level}'
+                                  : level.name,
+                              style: BaselineType.heroTitle.copyWith(
+                                fontSize: 28,
+                              ),
                             ),
                           ],
                         ),
@@ -96,7 +101,8 @@ class ProfileScreen extends ConsumerWidget {
                         child: _HeroStat(
                           value: '${session.trainingMinutes}',
                           label: 'training min',
-                          semantics: '${session.trainingMinutes} training minutes',
+                          semantics:
+                              '${session.trainingMinutes} training minutes',
                         ),
                       ),
                       Expanded(
@@ -240,7 +246,9 @@ class ProfileScreen extends ConsumerWidget {
             ),
             NavRow(
               label: 'Skill rating',
-              detail: skillRatingDetail(session.skillRating) ?? 'USTA NTRP and rough levels',
+              detail:
+                  skillRatingDetail(session.skillRating) ??
+                  'USTA NTRP and rough levels',
               icon: Icons.speed_rounded,
               onTap: () => context.push('/profile/rating'),
             ),
@@ -261,6 +269,14 @@ class ProfileScreen extends ConsumerWidget {
               label: 'Techniques',
               icon: Icons.auto_awesome_rounded,
               onTap: () => context.push('/learn/techniques'),
+            ),
+            const SizedBox(height: 8),
+            NavRow(
+              label: 'Video library',
+              detail:
+                  '${licensedVideos.length} clips · licensed player/human footage + Baseline diagrams',
+              icon: Icons.video_library_outlined,
+              onTap: () => context.push('/videos'),
             ),
             const SizedBox(height: 8),
             NavRow(
@@ -383,7 +399,9 @@ class _LevelChip extends StatelessWidget {
               color: selected ? BaselineColors.ball : BaselineColors.nightCourt,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: selected ? BaselineColors.nightCourt : Colors.transparent,
+                color: selected
+                    ? BaselineColors.nightCourt
+                    : Colors.transparent,
                 width: 2,
               ),
             ),

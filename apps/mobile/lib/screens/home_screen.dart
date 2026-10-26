@@ -251,6 +251,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onAction: () => context.push('/videos'),
                 padding: const EdgeInsets.only(top: 22, bottom: 8),
               ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: ScaledText(
+                  '${licensedVideos.length} offline clips combine licensed player/human footage with Baseline diagrams. Use them alongside the written coaching; not every clip is an exact technique demonstration.',
+                  style: BaselineType.cardMuted.copyWith(fontSize: 14),
+                ),
+              ),
               DemonstrationCard(video: featured.first),
             ],
           ],
@@ -447,7 +454,9 @@ class _TodayCard extends ConsumerWidget {
             semanticsLabel: done
                 ? "Today's training is done"
                 : "Mark today's training done",
-            tone: done ? BaselineButtonTone.outline : BaselineButtonTone.fairway,
+            tone: done
+                ? BaselineButtonTone.outline
+                : BaselineButtonTone.fairway,
             icon: done ? Icons.check_circle_rounded : null,
             onPressed: done
                 ? null
@@ -563,11 +572,7 @@ class _Stat extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  ScaledText(
-                    unit,
-                    maxLines: 1,
-                    style: BaselineType.cardMuted,
-                  ),
+                  ScaledText(unit, maxLines: 1, style: BaselineType.cardMuted),
                 ],
               ),
               const SizedBox(height: 2),

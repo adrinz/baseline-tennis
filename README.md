@@ -2,6 +2,8 @@
 
 Baseline is a tennis learning, training, and local-play app. A player can go from “I have never played” to a guided path: learn a technique, practice a drill, find a court, find a partner, and track progress.
 
+The mobile client currently bundles 101 offline video clips, including 31 new Pexels additions. The library combines licensed player/human footage with Baseline diagrams; clips support the written coaching, and not every clip is an exact technique demonstration.
+
 The first client is iOS. The mobile app is Flutter so the same product can ship on Android later without a second backend. Maps, sign-in, and push notifications sit behind interfaces so iOS can use Apple services while Android uses the equivalents.
 
 ## Read this first

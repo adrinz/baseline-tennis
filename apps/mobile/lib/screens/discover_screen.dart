@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:baseline/data/nearby_places.dart';
+import 'package:baseline/data/videos.dart';
 import 'package:baseline/state/session_controller.dart';
 import 'package:baseline/theme/baseline_colors.dart';
 import 'package:baseline/theme/baseline_theme.dart';
@@ -12,6 +13,7 @@ import 'package:baseline/widgets/scaled_text.dart';
 import 'package:baseline/data/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 enum DiscoverSegment { courts, players, coaches, stores }
 
@@ -91,10 +93,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 controller: _scroll,
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
                 children: [
-                  const ScaledText(
-                    'Discover',
-                    style: BaselineType.screenTitle,
-                  ),
+                  const ScaledText('Discover', style: BaselineType.screenTitle),
                   const SizedBox(height: 6),
                   Row(
                     children: [
@@ -127,6 +126,8 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       _showingPlace = false;
                     }),
                   ),
+                  const SizedBox(height: 12),
+                  const _VideoLibraryCard(),
                   const SizedBox(height: 16),
                   switch (_segment) {
                     DiscoverSegment.courts => _MapPane(
@@ -137,22 +138,22 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       onShowingPlace: _setShowingPlace,
                       empty: 'No tennis courts showed up in this distance. Try a wider distance.',
                     ),
-                    DiscoverSegment.players => session.isAdult
-                        ? _MapPane(
-                            key: const ValueKey('players'),
-                            kind: 'players',
-                            chooseRadius: true,
-                            closeRequests: _closeRequests,
-                            onShowingPlace: _setShowingPlace,
-                            empty:
-                                'No tennis leagues, clubs, or social groups showed up in this distance. Try a wider distance.',
-                            header: _PlayerIntro(
-                              discoverable: session.discoverable,
-                              onDiscoverable: (value) =>
-                                  _setDiscoverable(context, value),
-                            ),
-                          )
-                        : const _PlayersOff(),
+                    DiscoverSegment.players =>
+                      session.isAdult
+                          ? _MapPane(
+                              key: const ValueKey('players'),
+                              kind: 'players',
+                              chooseRadius: true,
+                              closeRequests: _closeRequests,
+                              onShowingPlace: _setShowingPlace,
+                              empty: 'No tennis leagues, clubs, or social groups showed up in this distance. Try a wider distance.',
+                              header: _PlayerIntro(
+                                discoverable: session.discoverable,
+                                onDiscoverable: (value) =>
+                                    _setDiscoverable(context, value),
+                              ),
+                            )
+                          : const _PlayersOff(),
                     DiscoverSegment.coaches => _MapPane(
                       key: const ValueKey('coaches'),
                       kind: 'coaches',
@@ -223,6 +224,53 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     if (confirmed == true) {
       ref.read(sessionProvider.notifier).setDiscoverable(true);
     }
+  }
+}
+
+class _VideoLibraryCard extends StatelessWidget {
+  const _VideoLibraryCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return LineCard(
+      semanticsLabel: 'Open video library',
+      onTap: () => context.push('/videos'),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        children: [
+          const IconBadge(
+            Icons.video_library_outlined,
+            tone: PillTone.ball,
+            size: 40,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ScaledText(
+                  'OFFLINE LEARNING',
+                  style: BaselineType.eyebrowFairway,
+                ),
+                const SizedBox(height: 1),
+                const ScaledText(
+                  'Video library',
+                  style: BaselineType.cardTitle,
+                ),
+                const SizedBox(height: 1),
+                ScaledText(
+                  '${licensedVideos.length} clips · licensed player/human footage + Baseline diagrams. The written coaching leads; not every clip is an exact technique demonstration.',
+                  maxLines: 3,
+                  style: BaselineType.cardMuted,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 6),
+          const Icon(Icons.chevron_right, color: BaselineColors.muted),
+        ],
+      ),
+    );
   }
 }
 
@@ -419,12 +467,9 @@ class _MapPaneState extends ConsumerState<_MapPane> {
             miles: _radiusMiles,
             presets: _presetMiles,
             caption: switch (widget.kind) {
-              'coaches' =>
-                'Tennis coaches, instructors, academies, and clubs. A wider distance keeps every coach from a shorter one.',
-              'stores' =>
-                'Tennis shops, stringers, and sporting-goods stores. A wider distance keeps every shop from a shorter one.',
-              'players' =>
-                'Tennis leagues, clubs, and social play. A wider distance includes everyone from a shorter one.',
+              'coaches' => 'Tennis coaches, instructors, academies, and clubs. A wider distance keeps every coach from a shorter one.',
+              'stores' => 'Tennis shops, stringers, and sporting-goods stores. A wider distance keeps every shop from a shorter one.',
+              'players' => 'Tennis leagues, clubs, and social play. A wider distance includes everyone from a shorter one.',
               _ => 'Named parks, schools, academies, and tennis centers. A wider distance keeps every court from a shorter one.',
             },
             onSelected: _setRadius,
@@ -796,7 +841,10 @@ class _Message extends StatelessWidget {
             size: 48,
           ),
           const SizedBox(height: 14),
-          ScaledText(title, style: BaselineType.cardTitle.copyWith(fontSize: 19)),
+          ScaledText(
+            title,
+            style: BaselineType.cardTitle.copyWith(fontSize: 19),
+          ),
           const SizedBox(height: 6),
           ScaledText(body, style: BaselineType.cardBody),
           const SizedBox(height: 16),
@@ -904,8 +952,7 @@ class _PlaceDetail extends ConsumerWidget {
                           'OpenStreetMap, including tennis academies and clubs',
                         'players' =>
                           'OpenStreetMap, including tennis leagues and clubs',
-                        _ =>
-                          'OpenStreetMap, including park and school courts',
+                        _ => 'OpenStreetMap, including park and school courts',
                       }
                     : 'Apple Maps, based on your current location',
               ),
@@ -1032,10 +1079,7 @@ class _PlayersOff extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ScaledText(
-            'Player discovery is off',
-            style: BaselineType.cardTitle,
-          ),
+          ScaledText('Player discovery is off', style: BaselineType.cardTitle),
           SizedBox(height: 8),
           ScaledText(
             'Discovery stays off until you are 18. You can still learn, train, and look up courts, coaches, and stores. Other players are hidden, and you cannot appear in search.',

@@ -47,14 +47,14 @@ const _sources = [
   _SourceCredit(
     source: 'Pexels',
     heading: 'Pexels creators',
-    body: 'Clips by cottonbro studio, Antoni Shkraba Studio, AI25.Studio, RDNE Stock project, Riaj Sohel, and melbourne ross under the Pexels License. Baseline added the English voiceover.',
+    body: 'Clips by cottonbro studio, Antoni Shkraba Studio, AI25.Studio, RDNE Stock project, Riaj Sohel, melbourne ross, Logan Voss, 5Efrem Efre, Cansu Hangül, TC Herzele Laddertornooi, and 5khezez | خزاز under the Pexels License. Baseline added the English voiceover.',
     licenseLabel: 'Pexels license',
     licenseUrl: 'https://www.pexels.com/license/',
   ),
   _SourceCredit(
     source: 'Baseline',
     heading: 'Baseline',
-    body: 'The grip, court, scoring, approach, and passing shot diagrams are original Baseline animations with Baseline narration.',
+    body: 'Baseline replaced its visible diagram demonstrations with licensed human/player footage. The written lesson remains the authoritative coaching source when a clip is supporting footage rather than an exact technique proof.',
   ),
 ];
 
