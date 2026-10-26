@@ -1,3 +1,4 @@
+import 'package:baseline/data/videos.dart';
 import 'package:baseline/screens/discover_screen.dart';
 import 'package:baseline/theme/baseline_colors.dart';
 import 'package:baseline/widgets/baseline_button.dart';
@@ -135,6 +136,11 @@ void main() {
       find.text('Levels 1–3 are the full path. Levels 4 and 5 stay visible.'),
       findsOneWidget,
     );
+    expect(find.text('${licensedVideos.length} video clips'), findsOneWidget);
+    expect(
+      find.textContaining('not every clip is an exact technique demonstration'),
+      findsOneWidget,
+    );
     await tester.scrollUntilVisible(find.text('Advanced Beginner'), 400);
     await tester.tap(find.text('Advanced Beginner'));
     await tester.pumpAndSettle();
@@ -159,7 +165,17 @@ void main() {
     await tester.pumpAndSettle();
     await tapTab(tester, 'Train');
     expect(find.text('THIS WEEK'), findsOneWidget);
+    expect(find.text('VIDEO LIBRARY'), findsOneWidget);
     final page = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      find.textContaining('${licensedVideos.length} clips to use with drills'),
+      500,
+      scrollable: page,
+    );
+    expect(
+      find.textContaining('${licensedVideos.length} clips to use with drills'),
+      findsOneWidget,
+    );
     await tester.scrollUntilVisible(
       find.text('DRILL LIBRARY'),
       500,
@@ -173,83 +189,97 @@ void main() {
     expect(find.text('Forehand consistency'), findsWidgets);
   });
 
-  testWidgets(
-    'E2E-A05 profile covers privacy, equipment, premium, and sign out',
-    (tester) async {
-      final places = PlacesHarness();
-      await pumpApp(tester, session: adultSession(), places: places);
+  testWidgets('E2E-A05 profile covers privacy, equipment, premium, and sign out', (
+    tester,
+  ) async {
+    final places = PlacesHarness();
+    await pumpApp(tester, session: adultSession(), places: places);
 
-      await tapTab(tester, 'Profile');
-      expect(find.text('Complete Beginner'), findsOneWidget);
-      expect(find.textContaining('Age band'), findsOneWidget);
-      expect(
-        find.textContaining('Goal · Rally with consistency'),
-        findsOneWidget,
-      );
+    await tapTab(tester, 'Profile');
+    expect(find.text('Complete Beginner'), findsOneWidget);
+    expect(find.textContaining('Age band'), findsOneWidget);
+    expect(
+      find.textContaining('Goal · Rally with consistency'),
+      findsOneWidget,
+    );
 
-      await tester.tap(find.text('Discoverable'));
-      await tester.pumpAndSettle();
-      expect(
-        find.text(
-          'Other players see a distance band, never an exact location.',
-        ),
-        findsOneWidget,
-      );
+    await tester.tap(find.text('Discoverable'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Other players see a distance band, never an exact location.'),
+      findsOneWidget,
+    );
 
-      await tester.scrollUntilVisible(find.text('Equipment guide'), 400);
-      await tester.tap(find.text('Equipment guide'));
-      await tester.pumpAndSettle();
-      expect(find.text('BASELINE PICK'), findsOneWidget);
-      expect(find.text('Harborline Learn 27'), findsOneWidget);
-      expect(find.text('FROM OUR PARTNERS'), findsOneWidget);
-      expect(find.text('Sponsored'), findsOneWidget);
-      expect(find.text('Launchline Match 100'), findsOneWidget);
-      await tester.pageBack();
-      await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Equipment guide'), 400);
+    await tester.tap(find.text('Equipment guide'));
+    await tester.pumpAndSettle();
+    expect(find.text('BASELINE PICK'), findsOneWidget);
+    expect(find.text('Harborline Learn 27'), findsOneWidget);
+    expect(find.text('FROM OUR PARTNERS'), findsOneWidget);
+    expect(find.text('Sponsored'), findsOneWidget);
+    expect(find.text('Launchline Match 100'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Match log'), 400);
-      await tester.tap(find.text('Match log'));
-      await tester.pumpAndSettle();
-      expect(find.text('Match log'), findsOneWidget);
-      await tester.pageBack();
-      await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Match log'), 400);
+    await tester.tap(find.text('Match log'));
+    await tester.pumpAndSettle();
+    expect(find.text('Match log'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Inbox'), 400);
-      await tester.tap(find.text('Inbox'));
-      await tester.pumpAndSettle();
-      expect(find.text('No requests yet.'), findsOneWidget);
-      await tester.pageBack();
-      await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Inbox'), 400);
+    await tester.tap(find.text('Inbox'));
+    await tester.pumpAndSettle();
+    expect(find.text('No requests yet.'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Privacy'), 400);
-      await tester.tap(find.text('Privacy'));
-      await tester.pumpAndSettle();
-      expect(find.text('Privacy'), findsWidgets);
-      await tester.pageBack();
-      await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Privacy'), 400);
+    await tester.tap(find.text('Privacy'));
+    await tester.pumpAndSettle();
+    expect(find.text('Privacy'), findsWidgets);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(find.text('Baseline Premium'), 400);
-      await tester.tap(find.text('Baseline Premium'));
-      await tester.pumpAndSettle();
-      expect(
-        find.text(
-          'The price is set in the App Store. This preview does not charge you.',
-        ),
-        findsOneWidget,
-      );
-      expect(find.text('Virtual Tennis Pro'), findsOneWidget);
-      await tester.ensureVisible(find.text('Unlock on this phone'));
-      await tester.tap(find.text('Unlock on this phone'));
-      await tester.pumpAndSettle();
-      expect(find.text('Premium is on'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Baseline Premium'), 400);
+    await tester.tap(find.text('Baseline Premium'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'The price is set in the App Store. This preview does not charge you.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Virtual Tennis Pro'), findsOneWidget);
+    await tester.ensureVisible(find.text('Unlock on this phone'));
+    await tester.tap(find.text('Unlock on this phone'));
+    await tester.pumpAndSettle();
+    expect(find.text('Premium is on'), findsOneWidget);
 
-      await tester.scrollUntilVisible(find.text('Sign out'), 400);
-      await tester.tap(find.text('Sign out'));
-      await tester.pumpAndSettle();
-      expect(find.text('Get started'), findsOneWidget);
-      expect(find.text('Sign in with Apple'), findsOneWidget);
-    },
-  );
+    await tester.scrollUntilVisible(
+      find.textContaining(
+        '${licensedVideos.length} clips · licensed player/human footage + Baseline diagrams',
+      ),
+      400,
+    );
+    expect(find.text('Video library'), findsOneWidget);
+    await tester.tap(
+      find.textContaining(
+        '${licensedVideos.length} clips · licensed player/human footage + Baseline diagrams',
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Video library'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(find.text('Sign out'), 400);
+    await tester.tap(find.text('Sign out'));
+    await tester.pumpAndSettle();
+    expect(find.text('Get started'), findsOneWidget);
+    expect(find.text('Sign in with Apple'), findsOneWidget);
+  });
 
   testWidgets('E2E-A06 Discover sits in the tab shell', (tester) async {
     final places = PlacesHarness();
@@ -257,10 +287,31 @@ void main() {
 
     await tapTab(tester, 'Discover');
     expect(find.byType(DiscoverScreen), findsOneWidget);
+    expect(find.text('OFFLINE LEARNING'), findsOneWidget);
+    expect(
+      find.textContaining(
+        '${licensedVideos.length} clips · licensed player/human footage + Baseline diagrams',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Terry Farrell Park'), findsOneWidget);
     expect(find.textContaining('km'), findsNothing);
 
+    await tester.tap(
+      find.textContaining(
+        '${licensedVideos.length} clips · licensed player/human footage + Baseline diagrams',
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Video library'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
     await tapTab(tester, 'Home');
     expect(find.text('START LEVEL 1'), findsOneWidget);
+    expect(
+      find.textContaining('${licensedVideos.length} offline clips'),
+      findsOneWidget,
+    );
   });
 }

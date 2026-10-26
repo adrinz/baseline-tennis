@@ -77,10 +77,17 @@ class _TrainScreenState extends ConsumerState<TrainScreen> {
               ),
             ),
             SectionHeader(
-              'WATCH A STROKE',
-              action: 'See all',
+              'VIDEO LIBRARY',
+              action: 'All ${licensedVideos.length}',
               onAction: () => context.push('/videos'),
               padding: const EdgeInsets.only(top: 24, bottom: 10),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: ScaledText(
+                '${licensedVideos.length} clips to use with drills: licensed player/human footage plus Baseline diagrams. Tap a clip to play it; the written drill remains the coaching.',
+                style: BaselineType.cardMuted.copyWith(fontSize: 14),
+              ),
             ),
             SizedBox(
               height: 172 * textScale,
@@ -352,10 +359,7 @@ class _ClipTile extends StatelessWidget {
           children: [
             Row(
               children: [
-                Pill(
-                  video.category.toUpperCase(),
-                  tone: PillTone.night,
-                ),
+                Pill(video.category.toUpperCase(), tone: PillTone.night),
                 const Spacer(),
                 const ExcludeSemantics(
                   child: DecoratedBox(

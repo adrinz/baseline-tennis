@@ -63,7 +63,7 @@ class LearnScreen extends ConsumerWidget {
             const SizedBox(height: 14),
             FadeSlideIn(
               child: HeroCard(
-                semanticsLabel: 'Open stroke demonstrations',
+                semanticsLabel: 'Open video library',
                 onTap: () => context.push('/videos'),
                 padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
                 child: Row(
@@ -78,13 +78,15 @@ class LearnScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 4),
                           ScaledText(
-                            '${licensedVideos.length} demonstrations',
-                            style: BaselineType.heroTitle.copyWith(fontSize: 26),
+                            '${licensedVideos.length} video clips',
+                            style: BaselineType.heroTitle.copyWith(
+                              fontSize: 26,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           ScaledText(
-                            'Grips, footwork, scoring, and every main stroke.',
-                            maxLines: 2,
+                            'Licensed player/human footage plus Baseline diagrams for offline learning. The written coaching leads; not every clip is an exact technique demonstration.',
+                            maxLines: 3,
                             style: TextStyle(
                               fontSize: 14,
                               height: 1.4,
@@ -248,7 +250,8 @@ class _LevelTile extends StatelessWidget {
                       'LEVEL ${level.id}',
                       style: BaselineType.eyebrowFairway,
                     ),
-                    if (current) const Pill('YOU ARE HERE', tone: PillTone.ball),
+                    if (current)
+                      const Pill('YOU ARE HERE', tone: PillTone.ball),
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -395,7 +398,10 @@ class LessonListScreen extends ConsumerWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.hourglass_top_rounded, color: BaselineColors.fairway),
+                  Icon(
+                    Icons.hourglass_top_rounded,
+                    color: BaselineColors.fairway,
+                  ),
                   SizedBox(width: 12),
                   Expanded(
                     child: ScaledText(

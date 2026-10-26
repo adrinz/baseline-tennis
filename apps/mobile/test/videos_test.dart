@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('every demonstration has a license record and a file', () {
-    expect(licensedVideos.length, 81);
+    expect(licensedVideos.length, 101);
     final ids = <String>{};
     for (final video in licensedVideos) {
       expect(ids.add(video.id), isTrue, reason: video.id);
@@ -47,97 +47,153 @@ void main() {
     expect(videosForLesson('scoring').first.technique, 'scoring');
   });
 
-  test('new technique lessons lead with focused demonstrations', () {
-    const expectedTechniques = <String, String>{
-      'serve-plus-one': 'serve-plus-one',
-      'inside-out-forehand': 'inside-out-forehand',
-      'crossover-step': 'crossover-step',
-      'kick-serve': 'kick-serve',
-      'angle-shot': 'angle-shot',
-      'neutral-ball': 'neutral-ball',
+  test('focused lessons lead with human demonstrations', () {
+    const focused = <String, String>{
+      'serve-plus-one': 'serve-plus-one-coverr',
+      'inside-out-forehand': 'inside-out-forehand-coverr',
+      'crossover-step': 'crossover-step-coverr',
+      'kick-serve': 'kick-serve-pexels',
+      'angle-shot': 'angle-shot-coverr',
+      'neutral-ball': 'neutral-ball-pexels',
+      'flat-serve': 'flat-serve-pexels',
+      'slice-serve': 'slice-serve-pexels',
+      'forehand-down-the-line': 'forehand-down-the-line-pexels',
+      'cross-court-forehand': 'cross-court-forehand-pexels',
+      'swing-volley': 'swing-volley-coverr',
+      'drop-volley': 'drop-volley-coverr',
+      'serve-and-volley': 'serve-and-volley-coverr',
+      'doubles-formation': 'doubles-formation-coverr',
+      'poaching': 'poaching-pexels',
+      'tiebreak-strategy': 'tiebreak-strategy-coverr',
+      'approach-shot': 'approach-live-pexels',
+      'passing-shot': 'passing-shot-pexels',
     };
 
-    for (final entry in expectedTechniques.entries) {
+    for (final entry in focused.entries) {
       final videos = videosForLesson(entry.key);
       expect(videos, isNotEmpty, reason: entry.key);
-      expect(videos.first.technique, entry.value, reason: entry.key);
-      expect(videos.first.source, 'Baseline', reason: entry.key);
+      expect(videos.first.id, entry.value, reason: entry.key);
+      expect(videos.first.source, isNot('Baseline'), reason: entry.key);
       expect(File(videos.first.asset).existsSync(), isTrue, reason: entry.key);
     }
   });
 
-  test('the demonstration batch contains 18 original diagrams', () {
-    const newDiagramIds = <String>[
-      'flat-serve-diagram',
-      'slice-serve-diagram',
-      'return-positioning-diagram',
-      'backhand-slice-diagram',
-      'forehand-down-the-line-diagram',
-      'cross-court-forehand-diagram',
-      'swing-volley-diagram',
-      'drop-volley-diagram',
-      'serve-and-volley-diagram',
-      'doubles-formation-diagram',
-      'poaching-diagram',
-      'tiebreak-strategy-diagram',
-      'serve-phases-diagram',
-      'return-footwork-diagram',
-      'net-positioning-diagram',
-      'doubles-signals-diagram',
-      'defensive-net-diagram',
-      'tiebreak-scoreboard-diagram',
-    ];
-
-    expect(newDiagramIds, hasLength(18));
-    for (final id in newDiagramIds) {
-      final video = videoById(id);
-      expect(video, isNotNull, reason: id);
-      expect(video!.source, 'Baseline', reason: id);
-      expect(video.license, 'Baseline original', reason: id);
-      expect(video.asset, 'assets/videos/$id.mp4', reason: id);
-      expect(File(video.asset).existsSync(), isTrue, reason: id);
-      expect(video.transcript, isNotEmpty, reason: id);
-    }
+  test('the visible catalog contains no diagram videos', () {
+    expect(
+      licensedVideos.where((video) => video.id.endsWith('-diagram')),
+      isEmpty,
+    );
+    expect(
+      licensedVideos.where((video) => video.source == 'Baseline'),
+      isEmpty,
+    );
   });
 
-  test('focused lessons lead with their matching diagram', () {
-    const focused = <String, String>{
-      'flat-serve': 'flat-serve-diagram',
-      'slice-serve': 'slice-serve-diagram',
-      'return-positioning': 'return-positioning-diagram',
-      'backhand-slice': 'backhand-slice-diagram',
-      'forehand-down-the-line': 'forehand-down-the-line-diagram',
-      'cross-court-forehand': 'cross-court-forehand-diagram',
-      'swing-volley': 'swing-volley-diagram',
-      'drop-volley': 'drop-volley-diagram',
-      'serve-and-volley': 'serve-and-volley-diagram',
-      'doubles-formation': 'doubles-formation-diagram',
-      'poaching': 'poaching-diagram',
-      'tiebreak-strategy': 'tiebreak-strategy-diagram',
-    };
-
-    for (final entry in focused.entries) {
-      expect(
-        videosForLesson(entry.key).first.id,
-        entry.value,
-        reason: entry.key,
-      );
-    }
-  });
-
-  test('supplemental diagrams are attached to their useful lessons', () {
+  test('supplemental human clips are attached to their useful lessons', () {
     const supplemental = <String, String>{
-      'basic-serve': 'serve-phases-diagram',
-      'return-of-serve': 'return-footwork-diagram',
-      'basic-volley': 'net-positioning-diagram',
-      'doubles-formation': 'doubles-signals-diagram',
-      'serve-and-volley': 'defensive-net-diagram',
-      'tiebreak-strategy': 'tiebreak-scoreboard-diagram',
+      'doubles-formation': 'doubles-signals-pexels',
+      'serve-and-volley': 'defensive-net-pexels',
+      'tiebreak-strategy': 'tiebreak-scoreboard-pexels',
     };
 
     for (final entry in supplemental.entries) {
       expect(
         videosForLesson(entry.key).map((video) => video.id),
+        contains(entry.value),
+        reason: entry.key,
+      );
+    }
+  });
+
+  test('human footage replaces the five removed diagram lessons', () {
+    const replacements = <String, List<String>>{
+      'basic-serve': ['serve-trophy', 'serve-toss', 'serve-side'],
+      'return-positioning': ['return-stance', 'ready-live', 'split-step-feet'],
+      'return-of-serve': [
+        'return-stance',
+        'split-step-feet',
+        'footwork-baseline',
+      ],
+      'backhand-slice': ['slice-shadow', 'backhand-one-shadow'],
+      'basic-volley': ['volley-shadow'],
+    };
+
+    for (final entry in replacements.entries) {
+      final ids = videosForLesson(entry.key).map((video) => video.id).toList();
+      for (final id in entry.value) {
+        expect(ids, contains(id), reason: entry.key);
+      }
+    }
+  });
+
+  test('expanded human catalog contains the 31 new Pexels alternatives', () {
+    const newIds = <String>[
+      'wall-rally-pexels',
+      'basket-setup-pexels',
+      'serve-toss-pexels',
+      'serve-to-volley-pexels',
+      'serve-close-pexels',
+      'serve-baseline-pexels',
+      'serve-routine-pexels',
+      'serve-clay-pexels',
+      'serve-prep-pexels',
+      'serve-practice-pexels',
+      'serve-repeat-pexels',
+      'serve-game-pexels',
+      'ball-control-pexels',
+      'racket-handling-pexels',
+      'player-practice-pexels',
+      'match-aerial-pexels',
+      'court-aerial-pexels',
+      'girls-practice-pexels',
+      'rally-live-pexels',
+      'match-rally-pexels',
+      'ball-bounce-pexels',
+      'clay-rally-pexels',
+      'racket-bounce-pexels',
+      'racket-ball-setup-pexels',
+      'racket-control-pexels',
+      'vertical-toss-pexels',
+      'vertical-court-practice-pexels',
+      'junior-practice-pexels',
+      'grip-close-pexels',
+      'grip-tape-pexels',
+      'racket-hold-pexels',
+    ];
+
+    expect(newIds, hasLength(31));
+    for (final id in newIds) {
+      final video = videoById(id);
+      expect(video, isNotNull, reason: id);
+      expect(video!.source, 'Pexels', reason: id);
+      expect(video.pageUrl, startsWith('https://www.pexels.com/'), reason: id);
+      expect(File(video.asset).existsSync(), isTrue, reason: id);
+      expect(video.transcript, isNotEmpty, reason: id);
+    }
+  });
+
+  test('restricted replacements have useful local alternatives', () {
+    const lessonAlternatives = <String, String>{
+      'basic-serve': 'serve-toss-pexels',
+      'grips': 'racket-hold-pexels',
+      'basic-volley': 'rally-live-pexels',
+      'neutral-ball': 'match-aerial-pexels',
+    };
+    const drillAlternatives = <String, String>{
+      'wall-rally': 'wall-rally-pexels',
+      'serve-target': 'basket-setup-pexels',
+    };
+
+    for (final entry in lessonAlternatives.entries) {
+      expect(
+        videosForLesson(entry.key).map((video) => video.id),
+        contains(entry.value),
+        reason: entry.key,
+      );
+    }
+    for (final entry in drillAlternatives.entries) {
+      expect(
+        videosForDrill(entry.key).map((video) => video.id),
         contains(entry.value),
         reason: entry.key,
       );
@@ -155,7 +211,7 @@ void main() {
       'Mixkit video license',
       'Coverr license',
       'Pexels license',
-      'Grips on the handle',
+      'Holding a tennis ball and racket',
     ]) {
       await tester.scrollUntilVisible(find.text(label), 400);
       expect(find.text(label), findsOneWidget);

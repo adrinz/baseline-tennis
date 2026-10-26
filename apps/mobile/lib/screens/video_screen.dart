@@ -34,12 +34,12 @@ class _VideoLibraryScreenState extends State<VideoLibraryScreen> {
         if (_category == null || video.category == _category) video,
     ];
     return Scaffold(
-      appBar: AppBar(title: const ScaledText('Demonstrations')),
+      appBar: AppBar(title: const ScaledText('Video library')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         children: [
-          const ScaledText(
-            'Licensed clips you can play inside Baseline. The written lesson is still the coaching.',
+          ScaledText(
+            '${licensedVideos.length} offline clips: licensed player/human footage plus Baseline diagrams. Use the written lesson for coaching; not every clip is an exact technique demonstration.',
             style: TextStyle(
               fontSize: 15,
               height: 1.4,

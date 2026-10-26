@@ -30,7 +30,7 @@ The admin publish action and the database check both enforce this. A lesson can 
 
 ## Seed content
 
-`content/seed/` holds original starter lessons, drills, glossary terms, and coach rules. The mobile build also includes original Baseline diagram clips; third-party video can be attached later only after an editor records and verifies its license.
+`content/seed/` holds original starter lessons, drills, glossary terms, and coach rules. The mobile build currently bundles 101 offline video clips: licensed player/human footage from Mixkit, Coverr, Pexels, and Wikimedia Commons, including 31 Pexels additions and human replacements for the former Baseline diagrams. The metadata and source records for each clip are verified before it is included. Clips can support a lesson without being an exact demonstration of its named technique.
 
 Technique families to cover over time:
 
