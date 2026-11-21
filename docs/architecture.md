@@ -36,7 +36,7 @@ Baseline is one product with three deployable parts:
 
 - **One API for iOS, Android, and admin.** Feature work happens once. A phone release does not require a schema change hidden inside the app.
 - **Flutter for the client.** Lists, video layouts, charts, and forms are shared. Sign in with Apple, maps, and notifications stay behind small interfaces (`AuthGateway`, `MapGateway`, `PushGateway`) so iOS can feel native.
-- **PostgreSQL + PostGIS.** Courts, coaches, stores, and player discovery are “near me” queries. Full-text search on lessons and drills is enough until the catalog is large. A separate search engine can be added behind `SearchService` later.
+- **PostgreSQL + PostGIS.** Server-side courts, coaches, stores, and future account features can use “near me” queries. The shipped mobile Players screen is deliberately narrower: it uses the phone's local map search for leagues, clubs, and social play without requiring the API or database.
 - **Videos are references, not copies.** Each video row stores source, creator, license, attribution, and a URL. The player embeds an allowed URL or streams a file Baseline owns. The API refuses to store a third-party download URL.
 
 ## Modules

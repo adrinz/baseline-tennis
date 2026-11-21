@@ -10,7 +10,6 @@ import 'package:baseline/widgets/line_card.dart';
 import 'package:baseline/widgets/pill.dart';
 import 'package:baseline/widgets/pressable.dart';
 import 'package:baseline/widgets/scaled_text.dart';
-import 'package:baseline/data/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -138,22 +137,15 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       onShowingPlace: _setShowingPlace,
                       empty: 'No tennis courts showed up in this distance. Try a wider distance.',
                     ),
-                    DiscoverSegment.players =>
-                      session.isAdult
-                          ? _MapPane(
-                              key: const ValueKey('players'),
-                              kind: 'players',
-                              chooseRadius: true,
-                              closeRequests: _closeRequests,
-                              onShowingPlace: _setShowingPlace,
-                              empty: 'No tennis leagues, clubs, or social groups showed up in this distance. Try a wider distance.',
-                              header: _PlayerIntro(
-                                discoverable: session.discoverable,
-                                onDiscoverable: (value) =>
-                                    _setDiscoverable(context, value),
-                              ),
-                            )
-                          : const _PlayersOff(),
+                    DiscoverSegment.players => _MapPane(
+                      key: const ValueKey('players'),
+                      kind: 'players',
+                      chooseRadius: true,
+                      closeRequests: _closeRequests,
+                      onShowingPlace: _setShowingPlace,
+                      empty: 'No tennis leagues, clubs, or social groups showed up in this distance. Try a wider distance.',
+                      header: const _PlayerIntro(),
+                    ),
                     DiscoverSegment.coaches => _MapPane(
                       key: const ValueKey('coaches'),
                       kind: 'coaches',
@@ -178,52 +170,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _setDiscoverable(BuildContext context, bool value) async {
-    if (!value) {
-      ref.read(sessionProvider.notifier).setDiscoverable(false);
-      return;
-    }
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: BaselineColors.line,
-        title: const ScaledText(
-          'Show a distance band?',
-          style: BaselineType.cardTitle,
-        ),
-        content: const ScaledText(
-          'Other players see a band such as within 5 miles. Baseline does not share your exact location.',
-          style: BaselineType.cardBody,
-        ),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              minimumSize: const Size(kMinTapTarget, kMinTapTarget),
-            ),
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const ScaledText(
-              'Not now',
-              style: TextStyle(color: BaselineColors.ink),
-            ),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              minimumSize: const Size(kMinTapTarget, kMinTapTarget),
-            ),
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const ScaledText(
-              'Show me',
-              style: TextStyle(color: BaselineColors.fairway),
-            ),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true) {
-      ref.read(sessionProvider.notifier).setDiscoverable(true);
-    }
   }
 }
 
@@ -1012,127 +958,20 @@ class _PlaceDetail extends ConsumerWidget {
   }
 }
 
-class _PlayerDetails extends ConsumerWidget {
-  const _PlayerDetails();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final session = ref.watch(sessionProvider);
-    final level = levelById(session.level);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const ScaledText('YOUR PLAYER DETAILS', style: BaselineType.eyebrow),
-        const SizedBox(height: 8),
-        LineCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _detailRow(
-                'Level',
-                level == null
-                    ? 'Level ${session.level}'
-                    : '${level.id} · ${level.name}',
-              ),
-              _detailRow('Goal', session.goal ?? 'Not set yet'),
-              _detailRow(
-                'Area',
-                session.city.isEmpty
-                    ? 'Waiting for your location'
-                    : session.city,
-              ),
-              _detailRow('Training days', '${session.daysPerWeek} a week'),
-              _detailRow(
-                'Visible to others',
-                session.discoverable
-                    ? 'Yes. Others see a distance band, not your exact location.'
-                    : 'No. Turn on Discoverable to appear.',
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _detailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ScaledText(label.toUpperCase(), style: BaselineType.eyebrow),
-          const SizedBox(height: 2),
-          ScaledText(value, style: BaselineType.cardBody),
-        ],
-      ),
-    );
-  }
-}
-
-class _PlayersOff extends StatelessWidget {
-  const _PlayersOff();
+class _PlayerIntro extends StatelessWidget {
+  const _PlayerIntro();
 
   @override
   Widget build(BuildContext context) {
-    return const LineCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ScaledText('Player discovery is off', style: BaselineType.cardTitle),
-          SizedBox(height: 8),
-          ScaledText(
-            'Discovery stays off until you are 18. You can still learn, train, and look up courts, coaches, and stores. Other players are hidden, and you cannot appear in search.',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const LineCard(
+          child: ScaledText(
+            'Find nearby tennis leagues, clubs, and social play. Results come from local map search; no player account, connection, API, or database is required.',
             style: BaselineType.cardBody,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PlayerIntro extends StatelessWidget {
-  const _PlayerIntro({
-    required this.discoverable,
-    required this.onDiscoverable,
-  });
-
-  final bool discoverable;
-  final ValueChanged<bool> onDiscoverable;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        LineCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ScaledText(
-                'Distance is a band, not a precise location.',
-                style: BaselineType.cardBody,
-              ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: const ScaledText(
-                  'Discoverable',
-                  style: BaselineType.cardTitle,
-                ),
-                subtitle: ScaledText(
-                  discoverable
-                      ? 'Players see your city and a distance band. Your exact location stays hidden.'
-                      : 'You are hidden. Turn this on to appear with a coarse area. Your exact location stays hidden.',
-                  style: BaselineType.cardMuted,
-                ),
-                value: discoverable,
-                onChanged: onDiscoverable,
-              ),
-            ],
-          ),
         ),
-        const SizedBox(height: 12),
-        const _PlayerDetails(),
       ],
     );
   }

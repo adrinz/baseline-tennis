@@ -16,37 +16,14 @@ class PrivacyScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final session = ref.watch(sessionProvider);
     return Scaffold(
       appBar: AppBar(title: const ScaledText('Privacy')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
         children: [
-          LineCard(
-            child: SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const ScaledText(
-                'Let players find me',
-                style: BaselineType.cardTitle,
-              ),
-              subtitle: ScaledText(
-                session.isAdult
-                    ? 'They see your name, level, city, and a distance band. Not your address.'
-                    : 'Finding players starts at 18. Lessons, drills, and courts stay available.',
-                style: BaselineType.cardMuted,
-              ),
-              value: session.isAdult && session.discoverable,
-              onChanged: session.isAdult
-                  ? (value) => ref
-                        .read(sessionProvider.notifier)
-                        .setDiscoverable(value)
-                  : null,
-            ),
-          ),
-          const SizedBox(height: 16),
           const NoteCard(
             title: 'Location',
-            body: 'Courts and shops can be shown on a map. Other players never get a pin.',
+            body: 'Courts, coaches, shops, leagues, clubs, and social play can be shown on a map. Baseline does not publish a player location.',
             borderColor: BaselineColors.nightCourt,
           ),
           const SizedBox(height: 24),

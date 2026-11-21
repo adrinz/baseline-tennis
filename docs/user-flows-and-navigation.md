@@ -42,11 +42,13 @@ Discover → Courts → map with list underneath → filters → court page (sur
 
 Empty state: “No courts in this radius yet” and a wider radius. OSM attribution sits on the map.
 
-## Find a partner
+## Find local tennis groups
 
-Discover → Players. If not discoverable, an explanation and a switch. Turning it on asks them to confirm a coarse area, not a pin on their home.
-
-Card → request → the other player accepts → conversation. Decline is silent. Block hides both directions. Report goes to the admin queue and confirms to the reporter.
+Discover → Players shows nearby tennis leagues, clubs, and social-play places
+from the phone's local map search. Choose a radius, open a result for its
+address, website, phone, directions, or saved-place action. This limited flow
+does not publish player profiles or create connection requests, so it works
+without the Baseline API or a database.
 
 ## Virtual Tennis Pro
 
@@ -54,7 +56,7 @@ From Home or a technique page, “Ask the pro.” Text question. Answer shows ca
 
 ## Profile and safety
 
-Profile → Privacy: discoverable, age band, search radius, delete account (confirm with a typed DELETE), export data.
+Profile → Privacy: location explanation, delete account (confirm with a typed DELETE), export data.
 
 Notifications: one switch per class from the data model.
 

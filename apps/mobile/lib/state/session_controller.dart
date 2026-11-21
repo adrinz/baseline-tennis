@@ -42,7 +42,9 @@ class SessionController extends Notifier<PlayerSession> {
       );
       final token = account.identityToken;
       final api = ref.read(baselineApiProvider);
-      if (api != null && token != null && account.provider != AuthProvider.email) {
+      if (api != null &&
+          token != null &&
+          account.provider != AuthProvider.email) {
         final remote = await api.signIn(
           provider: account.provider,
           identityToken: token,
@@ -80,7 +82,9 @@ class SessionController extends Notifier<PlayerSession> {
     final email = pendingEmail?.trim();
     if (email == null || email.isEmpty) return 'Request a new code.';
     if (_remoteEmail) {
-      final remote = await ref.read(baselineApiProvider)?.finishEmail(email, code.trim());
+      final remote = await ref
+          .read(baselineApiProvider)
+          ?.finishEmail(email, code.trim());
       if (remote == null) return "That code doesn't match.";
       _keepRemote(remote);
       _completeSignIn(
@@ -121,13 +125,7 @@ class SessionController extends Notifier<PlayerSession> {
   }
 
   void acceptAge(int birthYear) {
-    final adult = DateTime.now().year - birthYear >= 18;
-    _commit(
-      state.copyWith(
-        birthYear: birthYear,
-        discoverable: adult ? state.discoverable : false,
-      ),
-    );
+    _commit(state.copyWith(birthYear: birthYear));
     final token = signupToken;
     final api = ref.read(baselineApiProvider);
     if (token == null || api == null) return;
@@ -215,14 +213,6 @@ class SessionController extends Notifier<PlayerSession> {
 
   void addMatch(MatchLog log) {
     _commit(state.copyWith(matches: [log, ...state.matches]));
-  }
-
-  void setDiscoverable(bool value) {
-    if (!state.isAdult) {
-      _commit(state.copyWith(discoverable: false));
-      return;
-    }
-    _commit(state.copyWith(discoverable: value));
   }
 
   void setNotification(String key, bool value) {

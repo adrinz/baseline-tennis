@@ -203,13 +203,6 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.tap(find.text('Discoverable'));
-    await tester.pumpAndSettle();
-    expect(
-      find.text('Other players see a distance band, never an exact location.'),
-      findsOneWidget,
-    );
-
     await tester.scrollUntilVisible(find.text('Equipment guide'), 400);
     await tester.tap(find.text('Equipment guide'));
     await tester.pumpAndSettle();

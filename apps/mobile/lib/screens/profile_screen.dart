@@ -174,34 +174,6 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
             const SectionHeader(
-              'PRIVACY',
-              padding: EdgeInsets.only(top: 22, bottom: 8),
-            ),
-            LineCard(
-              child: SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: const ScaledText(
-                  'Discoverable',
-                  style: BaselineType.cardTitle,
-                ),
-                subtitle: ScaledText(
-                  session.isAdult
-                      ? 'Other players see a distance band, never an exact location.'
-                      : 'Discovery stays off until you are 18. Learning, training, courts, coaches, and stores stay available.',
-                  style: BaselineType.cardMuted,
-                ),
-                value: session.isAdult && session.discoverable,
-                onChanged: session.isAdult
-                    ? (value) {
-                        tapFeedback();
-                        ref
-                            .read(sessionProvider.notifier)
-                            .setDiscoverable(value);
-                      }
-                    : null,
-              ),
-            ),
-            const SectionHeader(
               'NOTIFICATIONS',
               padding: EdgeInsets.only(top: 22, bottom: 8),
             ),
