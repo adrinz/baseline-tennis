@@ -188,17 +188,19 @@ void main() {
     expect(find.text('Baseline Outfitters'), findsOneWidget);
   });
 
-  testWidgets('E2E-D05 adult players use a mile band and stay unpinned', (
+  testWidgets('E2E-D05 players show local leagues, clubs, and social play', (
     tester,
   ) async {
     final places = PlacesHarness();
     await pumpDiscover(tester, session: adultSession(), places: places);
 
     await tapSemanticsButton(tester, 'Players');
-    expect(find.text('Discoverable'), findsOneWidget);
+    expect(
+      find.textContaining('Find nearby tennis leagues, clubs, and social play'),
+      findsOneWidget,
+    );
     expect(find.text('Park Ave Tennis'), findsOneWidget);
     expect(find.text('Deer Park Tennis Club'), findsNothing);
-    expect(find.textContaining('exact location stays hidden'), findsOneWidget);
     expect(places.searchMiles('players'), [5]);
 
     await tapSemanticsButton(tester, '10 mi, search radius');
@@ -211,29 +213,19 @@ void main() {
       ),
       findsOneWidget,
     );
-
-    await tester.tap(find.text('Discoverable'));
-    await tester.pumpAndSettle();
-    expect(find.text('Show a distance band?'), findsOneWidget);
-    expect(find.textContaining('within 5 miles'), findsOneWidget);
-    await tester.tap(find.text('Show me'));
-    await tester.pumpAndSettle();
-    expect(
-      find.textContaining('Players see your city and a distance band'),
-      findsOneWidget,
-    );
   });
 
-  testWidgets('E2E-D06 players under 18 stay off discovery', (tester) async {
+  testWidgets('E2E-D06 players are local results for every age', (
+    tester,
+  ) async {
     final places = PlacesHarness();
     await pumpDiscover(tester, session: minorSession(), places: places);
 
     await tapSemanticsButton(tester, 'Players');
-    expect(find.text('Player discovery is off'), findsOneWidget);
-    expect(find.textContaining('until you are 18'), findsOneWidget);
-    expect(find.text('Discoverable'), findsNothing);
-    expect(find.text('5 mi'), findsNothing);
-    expect(places.searchMiles('players'), isEmpty);
+    expect(find.text('Park Ave Tennis'), findsOneWidget);
+    expect(find.text('Player discovery is off'), findsNothing);
+    expect(find.text('5 mi'), findsOneWidget);
+    expect(places.searchMiles('players'), [5]);
   });
 
   testWidgets('E2E-D07 denied location explains how to turn it on', (

@@ -88,7 +88,6 @@ class PlayerSession {
     this.completedLessonSlugs = const {},
     this.completedDrillSlugs = const {},
     this.streak = 0,
-    this.discoverable = false,
     this.notifications = defaultNotifications,
     this.city = 'Melville',
     this.premium = false,
@@ -116,7 +115,6 @@ class PlayerSession {
   final Set<String> completedLessonSlugs;
   final Set<String> completedDrillSlugs;
   final int streak;
-  final bool discoverable;
   final Map<String, bool> notifications;
   final String city;
   final bool premium;
@@ -161,7 +159,6 @@ class PlayerSession {
     Set<String>? completedLessonSlugs,
     Set<String>? completedDrillSlugs,
     int? streak,
-    bool? discoverable,
     Map<String, bool>? notifications,
     String? city,
     bool? premium,
@@ -189,7 +186,6 @@ class PlayerSession {
       completedLessonSlugs: completedLessonSlugs ?? this.completedLessonSlugs,
       completedDrillSlugs: completedDrillSlugs ?? this.completedDrillSlugs,
       streak: streak ?? this.streak,
-      discoverable: discoverable ?? this.discoverable,
       notifications: notifications ?? this.notifications,
       city: city ?? this.city,
       premium: premium ?? this.premium,
@@ -207,10 +203,9 @@ const _authPaths = {'/welcome', '/sign-in', '/email', '/code'};
 String? firstNameFromEmail(String email) {
   final local = email.split('@').first.trim();
   if (local.isEmpty) return null;
-  final token = local.split(RegExp(r'[^A-Za-z]+')).firstWhere(
-    (part) => part.isNotEmpty,
-    orElse: () => '',
-  );
+  final token = local
+      .split(RegExp(r'[^A-Za-z]+'))
+      .firstWhere((part) => part.isNotEmpty, orElse: () => '');
   if (token.length < 2) return null;
   return '${token[0].toUpperCase()}${token.substring(1).toLowerCase()}';
 }

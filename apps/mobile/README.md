@@ -10,6 +10,11 @@ not every clip is an exact technique demonstration. Sign-in is local: Apple and
 Google continue straight through, and any email code is accepted. Players under
 16 are stopped at the age gate.
 
+Discover → Players is intentionally local-only. It shows nearby tennis leagues,
+clubs, and social-play places from the phone's map search. It does not publish a
+player profile, create connection requests, or require the Baseline API or a
+database.
+
 ## Run
 
 ```bash

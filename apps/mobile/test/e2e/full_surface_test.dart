@@ -209,15 +209,6 @@ void main() {
     await tapSemanticsButton(tester, 'Level 2 Beginner');
     expect(find.text('Beginner'), findsOneWidget);
 
-    final discoverable = find.byType(SwitchListTile).first;
-    await tester.tap(discoverable);
-    await tester.pumpAndSettle();
-    expect(tester.widget<SwitchListTile>(discoverable).value, isTrue);
-    expect(
-      find.text('Other players see a distance band, never an exact location.'),
-      findsOneWidget,
-    );
-
     await tester.scrollUntilVisible(find.text('Practice reminders'), 500);
     final reminder = find.widgetWithText(SwitchListTile, 'Practice reminders');
     final before = tester.widget<SwitchListTile>(reminder).value;
